@@ -9,10 +9,22 @@ function GameBoard({ roundsData }: { roundsData: Rounds }) {
         width: "100%",
         flexWrap: "wrap",
         justifyContent: "center",
-        marginBottom: 16
+        marginBottom: 16,
+        position: "relative"
         // alignItems: "center"
       }}
     >
+      {/* <div
+        style={{
+          background: "#0000002b",
+          position: "absolute",
+          height: "100%",
+          width: "100%",
+          color: "white"
+        }}
+      >
+        Game Over
+      </div> */}
       {roundsData.map((guess, i) => (
         <div key={i} style={{ display: "flex" }}>
           {guess.map((hi, i) => (
