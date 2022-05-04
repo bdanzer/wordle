@@ -1,3 +1,4 @@
+import { statuses } from "../../@types";
 import { getColor } from "../../util/getColor";
 
 const keyboardLetters = [
@@ -6,7 +7,30 @@ const keyboardLetters = [
   ["z", "x", "c", "v", "b", "n", "m"]
 ];
 
-function Keyboard() {
+function Keyboard({
+  greenLetters,
+  yellowLetters,
+  failedLetters,
+  onLetterSelection
+}: {
+  greenLetters: string[];
+  yellowLetters: string[];
+  failedLetters: string[];
+  onLetterSelection: (letter: string) => void;
+}) {
+  const getNewColor = (letter: string) => {
+    let color: statuses = "none";
+    if (greenLetters.includes(letter)) {
+      color = "green";
+    } else if (yellowLetters.includes(letter)) {
+      color = "yellow";
+    } else if (failedLetters.includes(letter)) {
+      return "gray";
+    }
+
+    return getColor(color);
+  };
+
   return (
     <div
       style={{
@@ -15,8 +39,9 @@ function Keyboard() {
         flexWrap: "wrap"
       }}
     >
-      {keyboardLetters.map((letters) => (
+      {keyboardLetters.map((letters, i) => (
         <div
+          key={i}
           style={{
             display: "flex",
             width: "100%",
@@ -27,6 +52,8 @@ function Keyboard() {
         >
           {letters.map((letter) => (
             <div
+              onClick={() => onLetterSelection(letter)}
+              key={letter}
               style={{
                 height: 40,
                 width: 30,
@@ -36,16 +63,17 @@ function Keyboard() {
                 alignItems: "center",
                 margin: 2,
                 borderRadius: 6,
-                backgroundColor: getColor(""),
-                color: "white"
+                backgroundColor: getNewColor(letter),
+                color: "white",
+                textTransform: "uppercase"
               }}
-              key={letter}
             >
               {letter}
             </div>
           ))}
         </div>
       ))}
+      <button>Submit</button>
     </div>
   );
 }

@@ -1,4 +1,6 @@
-export const getColor = (status: string) => {
+import { statuses } from "../@types";
+
+export const getColor = (status: statuses) => {
   switch (status) {
     case "pending":
       return "#515A5A";
