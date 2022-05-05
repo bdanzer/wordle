@@ -24,8 +24,10 @@ function Button({
         borderRadius: 6,
         textTransform: "uppercase",
         fontWeight: 700,
+        fontSize: 16,
+        letterSpacing: "1.25px",
         color: "white",
-        cursor: "pointer"
+        cursor: "pointer",
       }}
     >
       {children}

@@ -20,9 +20,9 @@ function BackSpaceKey({
         alignItems: "center",
         margin: 2,
         borderRadius: 6,
-        // backgroundColor: "lightgray",
+        // backgroundColor: gray,
         color: "white",
-        fontSize: 8,
+        fontSize: 10,
         textTransform: "uppercase",
       }}
     >
