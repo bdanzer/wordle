@@ -16,8 +16,8 @@ function WordleBox({
     <div
       style={{
         borderRadius: miniBoard ? 4 : 6,
-        height: miniBoard ? 30 : 62,
-        width: miniBoard ? 30 : 62,
+        height: miniBoard ? 30 : 69,
+        width: miniBoard ? 30 : 69,
         fontSize: miniBoard ? 12 : 35,
         transition: status === "pending" ? ".5s ease" : "2s ease",
         background: getColor(status),

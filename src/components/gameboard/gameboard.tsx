@@ -96,7 +96,7 @@ function GameBoard({
         flexWrap: "wrap",
         justifyContent: "center",
         position: "relative",
-        maxWidth: miniBoard ? 160 : 330,
+        maxWidth: miniBoard ? 160 : 365,
         margin: "auto",
         // alignItems: "center"
       }}

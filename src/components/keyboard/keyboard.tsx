@@ -12,8 +12,8 @@ function BackSpaceKey({
     <div
       onClick={() => onLetterSelection("Backspace")}
       style={{
-        height: 40,
-        width: 50,
+        height: 50,
+        width: 60,
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
@@ -45,8 +45,8 @@ function LetterKey({
       onClick={() => onLetterSelection(letter)}
       key={letter}
       style={{
-        height: 40,
-        width: 30,
+        height: 50,
+        width: 32,
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
@@ -85,10 +85,12 @@ function Keyboard({
     } else if (yellowLetters.includes(letter)) {
       color = "yellow";
     } else if (failedLetters.includes(letter)) {
-      return "gray";
+      return "black";
     }
 
-    return getColor(color);
+    return gray;
+
+    // return getColor(color);
   };
 
   return (
