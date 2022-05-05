@@ -69,10 +69,10 @@ const initStatus: Rounds = [
   ],
 ];
 
-// const randomWordleWord =
+// const wordleWord =
 //   wordleList[Math.floor(Math.random() * wordleList.length - 1)];
-const randomWordleWord = getRandomWord("abbot");
-// const randomWordleWord = "pryce";
+// const wordleWord = getRandomWord("abbot");
+// const wordleWord = "pryce";
 
 function useChallenge() {
   const location = useLocation();
@@ -89,9 +89,13 @@ function useChallenge() {
 
 export default function App({
   challengerData,
+  wordleWord,
+  newWordleWord,
 }: {
   challengerData: Rounds | null;
   wordIndex: number | null;
+  wordleWord: string;
+  newWordleWord: () => void;
 }) {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
   const [currentRound, setCurrentRound] = useState(0);
@@ -102,7 +106,7 @@ export default function App({
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound));
   console.log("currentRound", currentRound);
-  console.log("randomWordleWord", randomWordleWord);
+  console.log("wordleWord", wordleWord);
   const flattenedRounds = flatten(roundsData);
   const greenLetters = flattenedRounds
     .filter((thing) => thing.status === "green")
@@ -186,9 +190,9 @@ export default function App({
           let winChecker = 0;
 
           currentRoundItems.forEach((item, i) => {
-            const indexOfLetter = randomWordleWord.indexOf(item.letter);
+            const indexOfLetter = wordleWord.indexOf(item.letter);
 
-            if (randomWordleWord[i] === currentRoundItems[i].letter) {
+            if (wordleWord[i] === currentRoundItems[i].letter) {
               winChecker++;
               item.status = "green";
             } else if (indexOfLetter !== -1) {
@@ -228,7 +232,7 @@ export default function App({
   const handleChallenge = () => {
     const stringifiedRoundsData = JSON.stringify(roundsData);
     console.log(stringifiedRoundsData);
-    const link = challengeLink(roundsData, randomWordleWord);
+    const link = challengeLink(roundsData, wordleWord);
     console.log("link", link);
   };
 
@@ -237,6 +241,7 @@ export default function App({
     setGameLost(false);
     setCurrentRound(0);
     setRoundsData(initStatus);
+    newWordleWord();
     console.log("handleStartOver");
   };
 
@@ -251,7 +256,7 @@ export default function App({
           isGameLost={isGameLost}
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
-          challengeLink={challengeLink(roundsData, randomWordleWord)}
+          challengeLink={challengeLink(roundsData, wordleWord)}
         />
       </div>
       {/* {letters.map((letter) => (

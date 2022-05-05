@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as ReactDOMClient from "react-dom/client";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 import { useParams } from "react-router";
@@ -6,7 +6,7 @@ import { BrowserRouter, useRoutes } from "react-router-dom";
 import { Rounds } from "./@types";
 
 import App from "./App";
-import { homeUrl } from "./util/game";
+import { getRandomWord, homeUrl } from "./util/game";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOMClient.createRoot(rootElement);
@@ -31,6 +31,16 @@ function Router() {
     : null;
   console.log("params", params, location, challengerGameData, wordIndex);
 
+  // const randomWordleWord = getRandomWord("abbot");
+  // const randomWordleWord = getRandomWord("emmet");
+  const randomWordleWord = getRandomWord(null, wordIndex);
+
+  const [wordleWord, setRandomWordleWord] = useState(randomWordleWord);
+
+  const newWordleWord = (wordIndex?: null | number) => {
+    setRandomWordleWord(getRandomWord(null, wordIndex));
+  };
+
   return useRoutes([
     {
       path: homeUrl,
@@ -40,7 +50,12 @@ function Router() {
         {
           path: homeUrl,
           element: (
-            <App challengerData={challengerGameData} wordIndex={wordIndex} />
+            <App
+              challengerData={challengerGameData}
+              wordIndex={wordIndex}
+              wordleWord={wordleWord}
+              newWordleWord={newWordleWord}
+            />
           ),
         },
       ],

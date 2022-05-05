@@ -28,8 +28,8 @@ export const buildWord = (row: GuessPattern[]) =>
 
 export const findWordIndex = (word: string): number => wordleList.indexOf(word);
 
-export const getRandomWord = (override?: string) =>
-  override || wordleList[Math.floor(Math.random() * wordleList.length - 1)];
+export const getRandomWord = (override?: string | null, index?: number | null) =>
+  override || wordleList[index || Math.floor(Math.random() * wordleList.length - 1)];
 
 export const keyboardLetters = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
