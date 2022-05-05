@@ -31,9 +31,9 @@ function Router() {
     : null;
   console.log("params", params, location, challengerGameData, wordIndex);
 
-  const randomWordleWord = getRandomWord("abbot");
+  // const randomWordleWord = getRandomWord("abbot");
   // const randomWordleWord = getRandomWord("emmet");
-  // const randomWordleWord = getRandomWord(null, wordIndex);
+  const randomWordleWord = getRandomWord(null, wordIndex);
 
   const [wordleWord, setRandomWordleWord] = useState(randomWordleWord);
 
