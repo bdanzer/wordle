@@ -10,6 +10,7 @@ import {
   buildWord,
   findWordIndex,
   getRandomWord,
+  homeUrl,
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
@@ -82,7 +83,7 @@ function useChallenge() {
       const wordIndex = findWordIndex(randomWord);
       const challengerGameData = JSON.stringify(roundsData);
       const stringUrl = qs.stringify({ wordIndex, challengerGameData });
-      return `${document.location.origin}?${stringUrl}`;
+      return `${document.location.origin}${homeUrl}?${stringUrl}`;
     },
   };
 }
