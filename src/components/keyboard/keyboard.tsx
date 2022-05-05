@@ -79,7 +79,7 @@ function Keyboard({
   wordComplete: boolean;
 }) {
   const getNewColor = (letter: string) => {
-    let color: statuses = "none";
+    let color: statuses = "pending";
     if (greenLetters.includes(letter)) {
       color = "green";
     } else if (yellowLetters.includes(letter)) {
@@ -88,9 +88,7 @@ function Keyboard({
       return "black";
     }
 
-    return gray;
-
-    // return getColor(color);
+    return getColor(color);
   };
 
   return (

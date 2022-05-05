@@ -121,17 +121,33 @@ function GameBoard({
             </span>
           )}
           {isChallenged ? (
-            <>
-              <span
-                style={{
-                  color: black,
-                  marginBottom: 12,
-                  display: "inline-block",
-                }}
-              >
-                How your opponent played
-              </span>
-              <GameBoard roundsData={challengerData} miniBoard />
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <div>
+                  <span
+                    style={{
+                      color: black,
+                      marginBottom: 12,
+                      display: "inline-block",
+                    }}
+                  >
+                    Your Board
+                  </span>
+                  <GameBoard roundsData={roundsData} miniBoard />
+                </div>
+                <div>
+                  <span
+                    style={{
+                      color: black,
+                      marginBottom: 12,
+                      display: "inline-block",
+                    }}
+                  >
+                    Their Board
+                  </span>
+                  <GameBoard roundsData={challengerData} miniBoard />
+                </div>
+              </div>
               <Button
                 backgroundColor={green}
                 onClick={() => {
@@ -141,7 +157,7 @@ function GameBoard({
               >
                 Play New Game
               </Button>
-            </>
+            </div>
           ) : (
             <GameBoard roundsData={roundsData} miniBoard />
           )}
