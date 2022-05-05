@@ -106,7 +106,7 @@ export default function App({
   const [isGameLost, setGameLost] = useState(false);
   const { challengeLink } = useChallenge();
 
-  const emojis = emojiCreation(roundsData.slice(0, currentRound));
+  const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   console.log("currentRound", currentRound);
   console.log("wordleWord", wordleWord);
   const flattenedRounds = flatten(roundsData);
@@ -258,6 +258,8 @@ export default function App({
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
           challengeLink={challengeLink(roundsData, wordleWord)}
+          wordleWord={wordleWord}
+          emojis={emojis}
         />
       </div>
       {/* {letters.map((letter) => (

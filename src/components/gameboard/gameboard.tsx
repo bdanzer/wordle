@@ -14,6 +14,7 @@ function MiniModal({
   children,
   isGameLost,
   isChallenged,
+  emojis,
 }: {
   onChallenge?: () => void;
   onStartOver?: () => void;
@@ -21,6 +22,7 @@ function MiniModal({
   children: ReactNode;
   isGameLost?: boolean;
   isChallenged?: boolean;
+  emojis?: string;
 }) {
   const [state, setState] = useState(false);
 
@@ -60,6 +62,11 @@ function MiniModal({
             </Button>
           </CopyToClipboard>
         )}
+        <CopyToClipboard text={emojis || ""} onCopy={() => setState(true)}>
+          <Button backgroundColor="gray" onClick={() => onChallenge?.()}>
+            {state ? "Copied" : "Copy "}
+          </Button>
+        </CopyToClipboard>
       </div>
     </div>
   );
@@ -75,6 +82,8 @@ function GameBoard({
   challengeLink,
   miniBoard = false,
   showLetters = true,
+  wordleWord,
+  emojis,
 }: {
   roundsData?: Rounds | null;
   challengerData?: Rounds | null;
@@ -85,6 +94,8 @@ function GameBoard({
   challengeLink?: string;
   miniBoard?: boolean;
   showLetters?: boolean;
+  wordleWord?: string;
+  emojis?: string;
 }) {
   const navigate = useNavigate();
   const isChallenged = Boolean(challengerData);
@@ -108,8 +119,18 @@ function GameBoard({
           onStartOver={onStartOver}
           isGameLost={isGameLost}
           isChallenged={isChallenged}
+          emojis={emojis}
         >
           <div>
+            <span
+              style={{
+                color: black,
+                marginBottom: 12,
+                display: "block",
+              }}
+            >
+              {wordleWord}
+            </span>
             {isGameWon && (
               <span
                 style={{

@@ -12,7 +12,8 @@ export const getEmojiByStatus = (status: statuses) => {
 };
 
 export const emojiCreation = (roundsData: Rounds) => {
-  let str = "";
+  const length = roundsData.length;
+  let str = `${length}/6\n`;
   roundsData.forEach((roundsData) => {
     roundsData.forEach((guess) => {
       str += `${getEmojiByStatus(guess.status)}`;
