@@ -1,6 +1,6 @@
 import { WritableDraft } from "immer/dist/internal";
 import { flattenDeep } from "lodash";
-import { GuessPattern } from "../@types";
+import { GuessPattern, statuses } from "../@types";
 import wordleList from "../wordleList.json";
 
 // const check = (
@@ -40,3 +40,76 @@ export const keyboardLetters = [
 export const acceptedInputs = flattenDeep(keyboardLetters);
 
 export const homeUrl = process.env.NODE_ENV === "production" ? "/wordle/" : "/";
+
+// Wordle letter tile background colors
+const COLOR_CORRECT_SPOT  = "green";
+const COLOR_WRONG_SPOT    = "yellow";
+const COLOR_NOT_ANY_SPOT  = "wrong";
+
+// guessColor returns the guess[index] letter tile background color.
+// 
+// Wordle tile coloring rules: 
+// Each guess must be a valid five-letter word. 
+// Hit the enter button to submit. 
+// After each guess, the color of the tiles will change.
+// Green:   The letter is in the word and in the correct spot.   
+// Yellow:  The letter is in the word but in the wrong spot.   
+// Gray:    The letter is not in the word in any spot.   
+export function guessColor(word: string, guess: string, index: number): statuses {
+    // correct (matched) index letter
+    if (guess[index] === word[index]) {
+        return COLOR_CORRECT_SPOT;
+    }
+
+    let wrongWord = 0;
+    let wrongGuess = 0;
+    for (let i = 0; i < word.length; i++) {
+        // count the wrong (unmatched) letters
+        if (word[i] === guess[index] && guess[i] !== guess[index] ) {
+            wrongWord++;
+        }
+        if (i <= index) {
+            if (guess[i] === guess[index] && word[i] !== guess[index]) {
+                wrongGuess++;
+            }
+        }
+
+        // an unmatched guess letter is wrong if it pairs with 
+        // an unmatched word letter
+        if (i >= index) {
+            if (wrongGuess === 0) {
+                break;
+            } 
+            if (wrongGuess <= wrongWord) {
+                return COLOR_WRONG_SPOT;
+            }
+        }
+    }
+
+    // otherwise not any
+    return COLOR_NOT_ANY_SPOT;
+}
+
+export const handleDoubleLetters = (wordleWord: string, currentLetter: string, guessedWord: string): statuses => {
+  let letterOccurancesInWordleWord = 0;
+  let letterOccurancesInGuessedWord = 0;
+  wordleWord.split('').forEach(wordleLetter => {
+    if (wordleLetter === currentLetter) {
+      letterOccurancesInWordleWord++
+    }
+  })
+
+  guessedWord.split('').forEach(guessedWordLetter => {
+    if (guessedWordLetter === currentLetter) {
+      letterOccurancesInGuessedWord++
+    }
+  })
+
+  if (letterOccurancesInWordleWord >= 2) {
+    wordleWord.split('').forEach(wordleLetter => {
+       
+    })
+  } 
+
+  return 'yellow'
+}

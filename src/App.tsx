@@ -10,6 +10,7 @@ import {
   buildWord,
   findWordIndex,
   getRandomWord,
+  guessColor,
   homeUrl,
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
@@ -193,11 +194,11 @@ export default function App({
           currentRoundItems.forEach((item, i) => {
             const indexOfLetter = wordleWord.indexOf(item.letter);
 
-            if (wordleWord[i] === currentRoundItems[i].letter) {
+            if (wordleWord[i] === item.letter) {
               winChecker++;
               item.status = "green";
             } else if (indexOfLetter !== -1) {
-              item.status = "yellow";
+              item.status = guessColor(wordleWord, word, i);
             } else {
               item.status = "wrong";
             }
