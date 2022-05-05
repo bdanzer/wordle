@@ -84,8 +84,9 @@ function LetterKey({
         alignItems: "center",
         margin: 2,
         borderRadius: 6,
+        fontWeight: 700,
         backgroundColor,
-        color: "white",
+        color: backgroundColor === "white" ? "black" : "white",
         textTransform: "uppercase",
       }}
     >
@@ -119,7 +120,7 @@ function Keyboard({
       return "black";
     }
 
-    return getColor(color);
+    return color === "pending" ? "white" : getColor(color);
   };
 
   return (
