@@ -47,7 +47,7 @@ function MiniModal({
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         {!isChallenged && (
           <Button backgroundColor="gray" onClick={() => onStartOver?.()}>
-            Start Over
+            New Game
           </Button>
         )}
         {!isGameLost && !isChallenged && (
@@ -109,58 +109,62 @@ function GameBoard({
           isGameLost={isGameLost}
           isChallenged={isChallenged}
         >
-          {isGameWon && (
-            <span
-              style={{
-                color: black,
-                marginBottom: 12,
-                display: "inline-block",
-              }}
-            >
-              You Completed the game
-            </span>
-          )}
-          {isChallenged ? (
-            <div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>
-                  <span
-                    style={{
-                      color: black,
-                      marginBottom: 12,
-                      display: "inline-block",
-                    }}
-                  >
-                    Your Board
-                  </span>
-                  <GameBoard roundsData={roundsData} miniBoard />
-                </div>
-                <div>
-                  <span
-                    style={{
-                      color: black,
-                      marginBottom: 12,
-                      display: "inline-block",
-                    }}
-                  >
-                    Their Board
-                  </span>
-                  <GameBoard roundsData={challengerData} miniBoard />
-                </div>
-              </div>
-              <Button
-                backgroundColor={green}
-                onClick={() => {
-                  navigate(homeUrl, { replace: true });
-                  onStartOver?.();
+          <div>
+            {isGameWon && (
+              <span
+                style={{
+                  color: black,
+                  marginBottom: 12,
+                  display: "inline-block",
                 }}
               >
-                Play New Game
-              </Button>
-            </div>
-          ) : (
-            <GameBoard roundsData={roundsData} miniBoard />
-          )}
+                You Completed the game
+              </span>
+            )}
+            {isChallenged ? (
+              <div>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div>
+                    <span
+                      style={{
+                        color: black,
+                        marginBottom: 12,
+                        display: "inline-block",
+                      }}
+                    >
+                      Your Board
+                    </span>
+                    <GameBoard roundsData={roundsData} miniBoard />
+                  </div>
+                  <div>
+                    <span
+                      style={{
+                        color: black,
+                        marginBottom: 12,
+                        display: "inline-block",
+                      }}
+                    >
+                      Their Board
+                    </span>
+                    <GameBoard roundsData={challengerData} miniBoard />
+                  </div>
+                </div>
+                <Button
+                  backgroundColor={green}
+                  onClick={() => {
+                    navigate(homeUrl, { replace: true });
+                    onStartOver?.();
+                  }}
+                >
+                  Play New Game
+                </Button>
+              </div>
+            ) : (
+              <GameBoard roundsData={roundsData} miniBoard />
+            )}
+          </div>
         </MiniModal>
       )}
       {roundsData?.map((guess, i) => (

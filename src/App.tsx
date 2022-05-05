@@ -119,8 +119,7 @@ export default function App({
   const failedLetters = flattenedRounds
     .filter((thing) => thing.status === "wrong")
     .map((letters) => letters.letter);
-  console.log("success", { greenLetters, yellowLetters });
-  console.log(getRandomWord("hi"));
+
   const letters = uniq(
     unionBy(
       flattenedRounds.filter(
@@ -227,7 +226,7 @@ export default function App({
     return () => {
       document.removeEventListener("keydown", handleLetter);
     };
-  }, [currentRound, isGameLost, isGameLost]);
+  }, [currentRound, isGameLost, isGameLost, wordleWord]);
 
   console.log("roundsData", roundsData);
 
