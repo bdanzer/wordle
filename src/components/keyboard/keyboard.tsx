@@ -77,7 +77,7 @@ function LetterKey({
       key={letter}
       style={{
         height: 50,
-        width: 32,
+        width: 34,
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
