@@ -6,6 +6,7 @@ import { BrowserRouter, useRoutes } from "react-router-dom";
 import { Rounds } from "./@types";
 
 import App from "./App";
+import { homeUrl } from "./util/game";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOMClient.createRoot(rootElement);
@@ -30,19 +31,14 @@ function Router() {
     : null;
   console.log("params", params, location, challengerGameData, wordIndex);
 
-  const envUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://bdanzer.github.io/wordle/"
-      : "/";
-
   return useRoutes([
     {
-      path: envUrl,
+      path: homeUrl,
       element: <Wrapper />,
       children: [
         { element: <Navigate to="/home" replace /> },
         {
-          path: envUrl,
+          path: homeUrl,
           element: (
             <App challengerData={challengerGameData} wordIndex={wordIndex} />
           ),

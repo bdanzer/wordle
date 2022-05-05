@@ -34,7 +34,9 @@ export const getRandomWord = (override?: string) =>
 export const keyboardLetters = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-  ["z", "x", "c", "v", "b", "n", "m", "Backspace"]
+  ["z", "x", "c", "v", "b", "n", "m", "Backspace"],
 ];
 
 export const acceptedInputs = flattenDeep(keyboardLetters);
+
+export const homeUrl = process.env.NODE_ENV === "production" ? "/wordle/" : "/";

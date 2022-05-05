@@ -5,6 +5,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ReactNode, useEffect, useState } from "react";
 import { black, green } from "../../util/getColor";
 import { useNavigate } from "react-router";
+import { homeUrl } from "../../util/game";
 
 function MiniModal({
   onChallenge,
@@ -134,7 +135,7 @@ function GameBoard({
               <Button
                 backgroundColor={green}
                 onClick={() => {
-                  navigate("/", { replace: true });
+                  navigate(homeUrl, { replace: true });
                   onStartOver?.();
                 }}
               >
