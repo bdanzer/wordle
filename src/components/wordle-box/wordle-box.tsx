@@ -6,8 +6,8 @@ function WordleBox({ letter, status }: { letter: string; status: statuses }) {
     <div
       style={{
         borderRadius: 6,
-        height: 100,
-        width: 100,
+        height: 62,
+        width: 62,
         fontSize: 35,
         transition: status === "pending" ? ".5s ease" : "2s ease",
         background: getColor(status),

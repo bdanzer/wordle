@@ -1,7 +1,18 @@
 import { Rounds } from "../../@types";
+import Button from "../Button/Button";
 import WordleBox from "../wordle-box/wordle-box";
 
-function GameBoard({ roundsData }: { roundsData: Rounds }) {
+function GameBoard({
+  roundsData,
+  isGameLost,
+  isGameWon,
+  onChallenge
+}: {
+  roundsData: Rounds;
+  isGameLost: boolean;
+  isGameWon: boolean;
+  onChallenge: () => void;
+}) {
   return (
     <div
       style={{
@@ -9,22 +20,29 @@ function GameBoard({ roundsData }: { roundsData: Rounds }) {
         width: "100%",
         flexWrap: "wrap",
         justifyContent: "center",
-        marginBottom: 16,
-        position: "relative"
+        position: "relative",
+        maxWidth: 330,
+        margin: "auto"
         // alignItems: "center"
       }}
     >
-      {/* <div
+      <div
         style={{
-          background: "#0000002b",
+          background: "rgb(0 0 0 / 90%)",
           position: "absolute",
-          height: "100%",
-          width: "100%",
-          color: "white"
+          height: "calc(100% - 32px)",
+          width: "calc(100% - 32px)",
+          color: "white",
+          borderRadius: 6,
+          padding: 16
         }}
       >
+        <Button backgroundColor="gray">Start Over</Button>
+        <Button backgroundColor="gray" onClick={onChallenge}>
+          Challenge
+        </Button>
         Game Over
-      </div> */}
+      </div>
       {roundsData.map((guess, i) => (
         <div key={i} style={{ display: "flex" }}>
           {guess.map((hi, i) => (

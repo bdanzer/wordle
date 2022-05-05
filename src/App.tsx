@@ -1,13 +1,21 @@
 import produce from "immer";
-import { uniq, flatten, unionBy } from "lodash";
+import { uniq, flatten, unionBy, trim } from "lodash";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import wordleList from "./wordleList.json";
 import { getColor } from "./util/getColor";
+import qs from "query-string";
+import {
+  acceptedInputs,
+  buildWord,
+  findWordIndex,
+  getRandomWord
+} from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
 import { Rounds } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
+import { useLocation } from "react-router";
 
 // abbot (the word)
 // toast (the guess, and messes up)
@@ -63,12 +71,29 @@ const initStatus: Rounds = [
 
 // const randomWordleWord =
 //   wordleList[Math.floor(Math.random() * wordleList.length - 1)];
-const randomWordleWord = "abbot";
+const randomWordleWord = getRandomWord("abbot");
 // const randomWordleWord = "pryce";
+
+function useChallenge() {
+  const location = useLocation();
+  return {
+    challengeLink: (roundsData: Rounds, randomWord: string) => {
+      console.log("location", location);
+      const wordIndex = findWordIndex(randomWord);
+      const challengerGameData = JSON.stringify(roundsData);
+      const stringUrl = qs.stringify({ wordIndex, challengerGameData });
+      return `${document.location.origin}?${stringUrl}`;
+    }
+  };
+}
 
 export default function App() {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
   const [currentRound, setCurrentRound] = useState(0);
+  const [isNotAWord, setNotAWord] = useState(false);
+  const [isGameWon, setGameWon] = useState(false);
+  const [isGameLost, setGameLost] = useState(false);
+  const { challengeLink } = useChallenge();
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound));
   console.log("currentRound", currentRound);
@@ -84,6 +109,7 @@ export default function App() {
     .filter((thing) => thing.status === "wrong")
     .map((letters) => letters.letter);
   console.log("success", { greenLetters, yellowLetters });
+  console.log(getRandomWord("hi"));
   const letters = uniq(
     unionBy(
       flattenedRounds.filter(
@@ -92,9 +118,11 @@ export default function App() {
       (item) => item.letter
     )
   );
+  const word = buildWord(roundsData[currentRound]);
+  console.log("word here", word);
 
   const handleLetter = (e?: KeyboardEvent | null, letter?: string) => {
-    const key = e?.key || letter;
+    const key = trim(e?.key || letter);
     console.log(key);
 
     console.log(e?.keyCode);
@@ -106,7 +134,11 @@ export default function App() {
     // console.log(e.key.match(/g{1}[a-z][A-Z]/));
 
     // if (isEnter) return;
-    console.log("callback");
+    console.log("callback", key, key !== "Enter", isEnter);
+
+    if (isGameWon || isGameLost) return;
+
+    // if (!acceptedInputs.includes(key)) return;
 
     setRoundsData(
       produce((draftState) => {
@@ -126,36 +158,32 @@ export default function App() {
             if (currentRoundItems[i].status === "pending") {
               currentRoundItems[i].status = "none";
               currentRoundItems[i].letter = "";
-              return;
+              // return;
+              break;
             }
           }
+        }
+
+        const word = buildWord(currentRoundItems);
+
+        console.log("WORD TROUBLE", word, wordleList.includes(word));
+
+        console.log("word", word);
+
+        if (!wordleList.includes(word) && word.length === 5) {
+          setNotAWord(true);
+          return;
+        } else {
+          setNotAWord(false);
         }
 
         if (isEnter) {
           let winChecker = 0;
 
-          const word = draftState[currentRound].reduce(
-            (prevValue, currentValue) => prevValue + currentValue.letter,
-            ""
-          );
-
-          console.log("WORD TROUBLE", word, wordleList.includes(word));
-
-          if (!wordleList.includes(word)) {
-            alert("NOT A WORD");
-            return draftState;
-          }
-
-          setCurrentRound((p) => p + 1);
-
-          console.log("word", word);
-
           currentRoundItems.forEach((item, i) => {
-            console.log(randomWordleWord[i], e.key);
             const indexOfLetter = randomWordleWord.indexOf(item.letter);
 
             if (randomWordleWord[i] === currentRoundItems[i].letter) {
-              console.log("got it right", item.letter);
               winChecker++;
               item.status = "green";
             } else if (indexOfLetter !== -1) {
@@ -164,9 +192,19 @@ export default function App() {
               item.status = "wrong";
             }
           });
-          if (winChecker === 5) {
-            alert("WINNNNNNER");
-          }
+
+          setCurrentRound((prevRound) => {
+            const nextRound = prevRound + 1;
+            if (winChecker === 5) {
+              setGameWon(true);
+              return prevRound;
+            } else if (nextRound > 5) {
+              setGameLost(true);
+              return prevRound;
+            }
+
+            return nextRound;
+          });
         }
       })
     );
@@ -178,14 +216,28 @@ export default function App() {
     return () => {
       document.removeEventListener("keydown", handleLetter);
     };
-  }, [currentRound]);
+  }, [currentRound, isGameLost, isGameLost]);
 
   console.log("roundsData", roundsData);
+
+  const handleChallenge = () => {
+    const stringifiedRoundsData = JSON.stringify(roundsData);
+    console.log(stringifiedRoundsData);
+    const link = challengeLink(roundsData, randomWordleWord);
+    console.log("link", link);
+  };
 
   return (
     <div className="App">
       <h2>Wordle Challenge</h2>
-      <GameBoard roundsData={roundsData} />
+      <div style={{ marginBottom: 6 }}>
+        <GameBoard
+          roundsData={roundsData}
+          isGameWon={isGameWon}
+          isGameLost={isGameLost}
+          onChallenge={handleChallenge}
+        />
+      </div>
       {/* {letters.map((letter) => (
         <div
           key={letter.letter}
@@ -201,13 +253,15 @@ export default function App() {
           {letter.letter}
         </div>
       ))} */}
-      <pre>{emojis}</pre>
-      {console.log(emojis)}
+      {/* <pre>{emojis}</pre>
+      {console.log(emojis)} */}
       <Keyboard
         onLetterSelection={(letter) => handleLetter(null, letter)}
         greenLetters={greenLetters}
         yellowLetters={yellowLetters}
         failedLetters={failedLetters}
+        notAWord={isNotAWord}
+        wordComplete={word.length === 5}
       />
     </div>
   );

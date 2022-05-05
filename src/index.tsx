@@ -1,9 +1,22 @@
-import { StrictMode } from "react";
 import * as ReactDOMClient from "react-dom/client";
+import { BrowserRouter, useRoutes } from "react-router-dom";
 
 import App from "./App";
 
 const rootElement = document.getElementById("root");
 const root = ReactDOMClient.createRoot(rootElement);
 
-root.render(<App />);
+function Routes() {
+  return useRoutes([
+    {
+      path: "/",
+      element: <App />
+    }
+  ]);
+}
+
+root.render(
+  <BrowserRouter>
+    <Routes />
+  </BrowserRouter>
+);
