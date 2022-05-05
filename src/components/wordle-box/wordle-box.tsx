@@ -1,26 +1,36 @@
 import { statuses } from "../../@types";
 import { getColor } from "../../util/getColor";
 
-function WordleBox({ letter, status }: { letter: string; status: statuses }) {
+function WordleBox({
+  letter,
+  status,
+  miniBoard,
+  showLetters = true,
+}: {
+  letter: string;
+  status: statuses;
+  miniBoard?: boolean;
+  showLetters?: boolean;
+}) {
   return (
     <div
       style={{
-        borderRadius: 6,
-        height: 62,
-        width: 62,
-        fontSize: 35,
+        borderRadius: miniBoard ? 4 : 6,
+        height: miniBoard ? 30 : 62,
+        width: miniBoard ? 30 : 62,
+        fontSize: miniBoard ? 12 : 35,
         transition: status === "pending" ? ".5s ease" : "2s ease",
         background: getColor(status),
         // border: "2px solid white",
-        margin: 2,
+        margin: miniBoard ? 1 : 2,
         color: "white",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        textTransform: "uppercase"
+        textTransform: "uppercase",
       }}
     >
-      {letter}
+      {showLetters ? letter : ""}
     </div>
   );
 }

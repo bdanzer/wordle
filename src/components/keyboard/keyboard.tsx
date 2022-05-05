@@ -3,9 +3,14 @@ import { keyboardLetters } from "../../util/game";
 import { getColor, gray, green, red } from "../../util/getColor";
 import Button from "../Button/Button";
 
-function BackSpaceKey() {
+function BackSpaceKey({
+  onLetterSelection,
+}: {
+  onLetterSelection: (letter: string) => void;
+}) {
   return (
     <div
+      onClick={() => onLetterSelection("Backspace")}
       style={{
         height: 40,
         width: 50,
@@ -18,7 +23,7 @@ function BackSpaceKey() {
         backgroundColor: "lightgray",
         color: "white",
         fontSize: 8,
-        textTransform: "uppercase"
+        textTransform: "uppercase",
       }}
     >
       {"Delete"}
@@ -29,7 +34,7 @@ function BackSpaceKey() {
 function LetterKey({
   letter,
   onLetterSelection,
-  backgroundColor
+  backgroundColor,
 }: {
   letter: string;
   onLetterSelection: (letter: string) => void;
@@ -50,7 +55,7 @@ function LetterKey({
         borderRadius: 6,
         backgroundColor,
         color: "white",
-        textTransform: "uppercase"
+        textTransform: "uppercase",
       }}
     >
       {letter}
@@ -64,7 +69,7 @@ function Keyboard({
   failedLetters,
   onLetterSelection,
   notAWord,
-  wordComplete
+  wordComplete,
 }: {
   greenLetters: string[];
   yellowLetters: string[];
@@ -91,7 +96,7 @@ function Keyboard({
       style={{
         display: "flex",
         justifyContent: "center",
-        flexWrap: "wrap"
+        flexWrap: "wrap",
       }}
     >
       {keyboardLetters.map((letters, i) => (
@@ -101,13 +106,16 @@ function Keyboard({
             display: "flex",
             width: "100%",
             flexWrap: "wrap",
-            justifyContent: "center"
+            justifyContent: "center",
             // alignItems: "center"
           }}
         >
           {letters.map((letter) =>
             letter === "Backspace" ? (
-              <BackSpaceKey key={letter} />
+              <BackSpaceKey
+                key={letter}
+                onLetterSelection={onLetterSelection}
+              />
             ) : (
               <LetterKey
                 key={letter}
@@ -119,7 +127,10 @@ function Keyboard({
           )}
         </div>
       ))}
-      <Button backgroundColor={notAWord ? red : wordComplete ? green : gray}>
+      <Button
+        onClick={() => onLetterSelection("Enter")}
+        backgroundColor={notAWord ? red : wordComplete ? green : gray}
+      >
         {notAWord ? "Not A Word" : "Submit"}
       </Button>
     </div>

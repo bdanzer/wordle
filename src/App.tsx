@@ -9,7 +9,7 @@ import {
   acceptedInputs,
   buildWord,
   findWordIndex,
-  getRandomWord
+  getRandomWord,
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
@@ -30,43 +30,43 @@ const initStatus: Rounds = [
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
-    { status: "none", letter: "" }
+    { status: "none", letter: "" },
   ],
   [
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
-    { status: "none", letter: "" }
+    { status: "none", letter: "" },
   ],
   [
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
-    { status: "none", letter: "" }
+    { status: "none", letter: "" },
   ],
   [
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
-    { status: "none", letter: "" }
+    { status: "none", letter: "" },
   ],
   [
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
-    { status: "none", letter: "" }
+    { status: "none", letter: "" },
   ],
   [
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
     { status: "none", letter: "" },
-    { status: "none", letter: "" }
-  ]
+    { status: "none", letter: "" },
+  ],
 ];
 
 // const randomWordleWord =
@@ -83,11 +83,16 @@ function useChallenge() {
       const challengerGameData = JSON.stringify(roundsData);
       const stringUrl = qs.stringify({ wordIndex, challengerGameData });
       return `${document.location.origin}?${stringUrl}`;
-    }
+    },
   };
 }
 
-export default function App() {
+export default function App({
+  challengerData,
+}: {
+  challengerData: Rounds | null;
+  wordIndex: number | null;
+}) {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
   const [currentRound, setCurrentRound] = useState(0);
   const [isNotAWord, setNotAWord] = useState(false);
@@ -126,8 +131,8 @@ export default function App() {
     console.log(key);
 
     console.log(e?.keyCode);
-    const isBackspace = e?.keyCode === 8;
-    const isEnter = e?.keyCode === 13;
+    const isBackspace = e?.keyCode === 8 || letter === "Backspace";
+    const isEnter = e?.keyCode === 13 || letter === "Enter";
 
     // const reg = new RegExp();
 
@@ -227,15 +232,26 @@ export default function App() {
     console.log("link", link);
   };
 
+  const handleStartOver = () => {
+    setGameWon(false);
+    setGameLost(false);
+    setCurrentRound(0);
+    setRoundsData(initStatus);
+    console.log("handleStartOver");
+  };
+
   return (
     <div className="App">
       <h2>Wordle Challenge</h2>
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}
+          challengerData={challengerData}
           isGameWon={isGameWon}
           isGameLost={isGameLost}
           onChallenge={handleChallenge}
+          onStartOver={handleStartOver}
+          challengeLink={challengeLink(roundsData, randomWordleWord)}
         />
       </div>
       {/* {letters.map((letter) => (
