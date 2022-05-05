@@ -16,7 +16,7 @@ export const getColor = (status: statuses) => {
     case "yellow":
       return "#F1C40F";
     case "none":
-      return 'lightgray';
+      return '#979A9A';
     default:
       return "black";
   }
