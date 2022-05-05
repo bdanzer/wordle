@@ -30,14 +30,19 @@ function Router() {
     : null;
   console.log("params", params, location, challengerGameData, wordIndex);
 
+  const envUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://bdanzer.github.io/wordle/"
+      : "/";
+
   return useRoutes([
     {
-      path: "/",
+      path: envUrl,
       element: <Wrapper />,
       children: [
         { element: <Navigate to="/home" replace /> },
         {
-          path: "/",
+          path: envUrl,
           element: (
             <App challengerData={challengerGameData} wordIndex={wordIndex} />
           ),
@@ -48,10 +53,6 @@ function Router() {
       path: "*",
       element: <Outlet />,
       children: [{ element: <Navigate to="home" replace /> }],
-    },
-    {
-      path: "/",
-      element: <Navigate to="/dashboard" />,
     },
   ]);
 }
