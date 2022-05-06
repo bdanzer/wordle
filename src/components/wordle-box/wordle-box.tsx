@@ -11,6 +11,7 @@ function WordleBox({
   pointer = false,
   width,
   margin,
+  hasPriority,
 }: {
   letter: string;
   status: statuses;
@@ -21,6 +22,7 @@ function WordleBox({
   pointer?: boolean;
   width?: number;
   margin?: number;
+  hasPriority?: boolean;
 }) {
   return (
     <div
@@ -29,11 +31,12 @@ function WordleBox({
         height: miniBoard ? 30 : width || 69,
         width: miniBoard ? 30 : width || 69,
         fontSize: miniBoard ? 12 : 35,
-        transition: selected
-          ? ".25s ease"
-          : status === "pending"
-          ? ".5s ease"
-          : "2s ease",
+        transition:
+          selected || hasPriority
+            ? ".25s ease"
+            : status === "pending"
+            ? ".5s ease"
+            : "2s ease",
         background: getColor(status),
         // border: "2px solid white",
         margin: miniBoard ? 1 : margin || 2,
@@ -43,6 +46,8 @@ function WordleBox({
         alignItems: "center",
         textTransform: "uppercase",
         ...(pointer && { cursor: "pointer" }),
+        // ...(hasPriority && { boxShadow: "inset 0 -2px 0 red" }),
+        ...(hasPriority && { boxShadow: "#2980B9 0px 0px 0px 4px inset" }),
       }}
       onClick={() => onSelect?.()}
     >

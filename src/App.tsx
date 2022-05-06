@@ -7,6 +7,7 @@ import {
   acceptedInputs,
   buildWord,
   deleteLetters,
+  getBoxPriorityPosition,
   getItemStatus,
   initStatus,
 } from "./util/game";
@@ -43,6 +44,10 @@ export default function App({
   console.log("Wordle Word", wordleWord);
   console.log("Rounds Data", roundsData);
   console.log("Challenger Data", challengerData);
+
+  const priorityBoxIndex = getBoxPriorityPosition(roundsData[currentRound]);
+
+  console.log({ roundsData, priorityBoxIndex });
 
   const flattenedRounds = flatten(roundsData);
 
@@ -209,6 +214,7 @@ export default function App({
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}
+          priorityBoxIndex={priorityBoxIndex}
           activeRound={currentRound}
           challengerData={challengerData}
           isGameWon={isGameWon}

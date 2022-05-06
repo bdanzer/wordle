@@ -24,6 +24,7 @@ function MiniModal({ children }: { children: ReactNode }) {
 
 function GameBoard({
   roundsData,
+  priorityBoxIndex,
   activeRound,
   challengerData,
   isGameLost,
@@ -38,6 +39,7 @@ function GameBoard({
   onWordBoxSelected,
 }: {
   roundsData?: Rounds | null;
+  priorityBoxIndex?: number;
   activeRound?: number;
   challengerData?: Rounds | null;
   onChallenge?: () => void;
@@ -112,14 +114,18 @@ function GameBoard({
       )}
       {roundsData?.map((row, roundRowIndex) => (
         <div key={roundRowIndex} style={{ display: "flex" }}>
-          {row.map((letterData, i) => (
+          {row.map((letterData, letterPosition) => (
             <WordleBox
-              key={i}
+              key={letterPosition}
               onSelect={() => {
                 if (activeRound === roundRowIndex) {
-                  handleWordBoxSelect(roundRowIndex, i);
+                  handleWordBoxSelect(roundRowIndex, letterPosition);
                 }
               }}
+              hasPriority={
+                roundRowIndex === activeRound &&
+                priorityBoxIndex === letterPosition
+              }
               pointer={roundRowIndex === activeRound}
               selected={letterData.status === "selected"}
               letter={letterData.letter}
