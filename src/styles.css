@@ -4,11 +4,11 @@
 }
 
 body {
-  background: #D0D3D4;
+  background:#EAEDED;
   /* display: flex;
   align-items: center;
   justify-content: center; */
   font-weight: 700;
   margin: 0;
-  padding: 0;
+  padding: 8px 0;
 }

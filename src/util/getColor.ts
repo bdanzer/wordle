@@ -1,23 +1,24 @@
 import { statuses } from "../@types";
 
 export const green = "#27AE60";
-export const yellow = "#F1C40F";
-export const pending = "#515A5A";
-export const black = "black";
+export const yellow = "#F4D03F";
+export const pending = "#808B96";
+export const black = "#34495E";
 export const red = "#C0392B";
 export const gray = "#5D6D7E";
+export const none = "#ABB2B9";
 
 export const getColor = (status: statuses) => {
   switch (status) {
     case "pending":
-      return "#515A5A";
+      return pending;
     case "green":
-      return "#27AE60";
+      return green;
     case "yellow":
-      return "#F1C40F";
+      return yellow;
     case "none":
-      return '#979A9A';
+      return none;
     default:
-      return "black";
+      return black;
   }
 };

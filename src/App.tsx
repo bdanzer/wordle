@@ -248,7 +248,7 @@ export default function App({
 
   return (
     <div className="App">
-      <h2>Wordle Challenge</h2>
+      {/* <h2>Wordle Challenge</h2> */}
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}

@@ -1,6 +1,6 @@
 import { statuses } from "../../@types";
 import { keyboardLetters } from "../../util/game";
-import { getColor, gray, green, red } from "../../util/getColor";
+import { black, getColor, gray, green, red } from "../../util/getColor";
 import Button from "../Button/Button";
 
 function BackSpaceKey({
@@ -13,7 +13,7 @@ function BackSpaceKey({
       onClick={() => onLetterSelection("Backspace")}
       style={{
         height: 58,
-        width: 60,
+        width: 66,
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
@@ -21,8 +21,8 @@ function BackSpaceKey({
         margin: 2.5,
         marginRight: -16,
         borderRadius: 6,
-        backgroundColor: gray,
-        color: "white",
+        backgroundColor: "white",
+        // color: "white",
         fontSize: 10,
         textTransform: "uppercase",
       }}
@@ -54,6 +54,7 @@ function LetterKey({
         alignItems: "center",
         margin: 2.5,
         borderRadius: 6,
+        transition: "0.1s ease-in",
         fontWeight: 700,
         backgroundColor,
         color: backgroundColor === "white" ? "black" : "white",
@@ -87,54 +88,58 @@ function Keyboard({
     } else if (yellowLetters.includes(letter)) {
       color = "yellow";
     } else if (failedLetters.includes(letter)) {
-      return "black";
+      return black;
     }
 
     return color === "pending" ? "white" : getColor(color);
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        flexWrap: "wrap",
-      }}
-    >
-      {keyboardLetters.map((letters, i) => (
-        <div
-          key={i}
-          style={{
-            display: "flex",
-            width: "100%",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            // alignItems: "center"
-          }}
-        >
-          {letters.map((letter) =>
-            letter === "Backspace" ? (
-              <BackSpaceKey
-                key={letter}
-                onLetterSelection={onLetterSelection}
-              />
-            ) : (
-              <LetterKey
-                key={letter}
-                letter={letter}
-                onLetterSelection={onLetterSelection}
-                backgroundColor={getNewColor(letter)}
-              />
-            )
-          )}
-        </div>
-      ))}
-      <Button
-        onClick={() => onLetterSelection("Enter")}
-        backgroundColor={notAWord ? red : wordComplete ? green : gray}
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+        }}
       >
-        {notAWord ? "Not A Word" : "Submit"}
-      </Button>
+        {keyboardLetters.map((letters, i) => (
+          <div
+            key={i}
+            style={{
+              display: "flex",
+              width: "100%",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              // alignItems: "center"
+            }}
+          >
+            {letters.map((letter) =>
+              letter === "Backspace" ? (
+                <BackSpaceKey
+                  key={letter}
+                  onLetterSelection={onLetterSelection}
+                />
+              ) : (
+                <LetterKey
+                  key={letter}
+                  letter={letter}
+                  onLetterSelection={onLetterSelection}
+                  backgroundColor={getNewColor(letter)}
+                />
+              )
+            )}
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 4 }}>
+        <Button
+          onClick={() => onLetterSelection("Enter")}
+          backgroundColor={notAWord ? red : wordComplete ? green : gray}
+        >
+          {notAWord ? "Not A Word" : "Submit"}
+        </Button>
+      </div>
     </div>
   );
 }
