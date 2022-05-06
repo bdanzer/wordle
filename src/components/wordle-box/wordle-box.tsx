@@ -12,6 +12,7 @@ function WordleBox({
   width,
   margin,
   hasPriority,
+  inline,
 }: {
   letter: string;
   status: statuses;
@@ -23,6 +24,7 @@ function WordleBox({
   width?: number;
   margin?: number;
   hasPriority?: boolean;
+  inline?: boolean;
 }) {
   return (
     <div
@@ -53,6 +55,7 @@ function WordleBox({
           boxShadow: "#229954 0px 0px 0px 4px inset",
         }),
         ...(hasPriority && { boxShadow: "#2980B9 0px 0px 0px 4px inset" }),
+        // ...(inline && { alignSelf: "flex-start" }),
       }}
       onClick={() => onSelect?.()}
     >

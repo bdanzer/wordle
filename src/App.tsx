@@ -23,11 +23,13 @@ export default function App({
   challengerData,
   wordleWord,
   newWordleWord,
+  isFirstTime,
 }: {
   challengerData: Rounds | null;
   wordIndex: number | null;
   wordleWord: string;
   newWordleWord: () => void;
+  isFirstTime: boolean;
 }) {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
   const [currentRound, setCurrentRound] = useState(0);
@@ -213,6 +215,7 @@ export default function App({
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}
+          isFirstTime={isFirstTime}
           priorityBoxIndex={priorityBoxIndex}
           activeRound={currentRound}
           challengerData={challengerData}

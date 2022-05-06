@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as ReactDOMClient from "react-dom/client";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 import { useParams } from "react-router";
@@ -21,6 +21,7 @@ function Router() {
   const params = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const isFirstTime = !localStorage.getItem("hasPlayed");
 
   const searchParams = new URLSearchParams(location.search);
 
@@ -40,6 +41,12 @@ function Router() {
     setRandomWordleWord(getRandomWord(null, wordIndex));
   };
 
+  useEffect(() => {
+    // if (isFirstTime) {
+    //   localStorage.setItem("hasPlayed", "true");
+    // }
+  }, []);
+
   return useRoutes([
     {
       path: homeUrl,
@@ -54,6 +61,7 @@ function Router() {
               wordIndex={wordIndex}
               wordleWord={wordleWord}
               newWordleWord={newWordleWord}
+              isFirstTime={isFirstTime}
             />
           ),
         },

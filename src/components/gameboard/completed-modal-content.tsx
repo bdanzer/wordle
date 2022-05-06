@@ -3,15 +3,10 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import { useNavigate } from "react-router";
 import { Rounds } from "../../@types";
 import { homeUrl } from "../../util/game";
-import { black, green, pending } from "../../util/getColor";
+import { black, green } from "../../util/getColor";
 import Button from "../Button/Button";
+import Divider from "../Divider/Divider";
 import GameBoard from "./gameboard";
-
-function Divider() {
-  return (
-    <div style={{ height: 2, background: pending, margin: "12px 0" }}></div>
-  );
-}
 
 function CompletedModalContent({
   wordleWord,
