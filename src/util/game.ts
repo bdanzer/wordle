@@ -1,6 +1,6 @@
 import { WritableDraft } from "immer/dist/internal";
 import { flattenDeep } from "lodash";
-import { GuessPattern, statuses } from "../@types";
+import { GuessPattern, Rounds, statuses } from "../@types";
 import wordleList from "../wordleList.json";
 
 // const check = (
@@ -35,6 +35,51 @@ export const keyboardLetters = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
   ["z", "x", "c", "v", "b", "n", "m", "Backspace"],
+];
+
+export const initStatus: Rounds = [
+  [
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+  ],
+  [
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+  ],
+  [
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+  ],
+  [
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+  ],
+  [
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+  ],
+  [
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+    { status: "none", letter: "" },
+  ],
 ];
 
 export const acceptedInputs = flattenDeep(keyboardLetters);

@@ -3,78 +3,18 @@ import { flatten, trim } from "lodash";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import wordleList from "./wordleList.json";
-import qs from "query-string";
 import {
   acceptedInputs,
   buildWord,
   deleteLetters,
-  findWordIndex,
   getItemStatus,
-  homeUrl,
+  initStatus,
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
 import { Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
-import { useLocation } from "react-router";
-
-const initStatus: Rounds = [
-  [
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-  ],
-  [
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-  ],
-  [
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-  ],
-  [
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-  ],
-  [
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-  ],
-  [
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-    { status: "none", letter: "" },
-  ],
-];
-
-function useChallenge() {
-  const location = useLocation();
-  return {
-    generateChallengeLink: (roundsData: Rounds, randomWord: string) => {
-      console.log("location", location);
-      const wordIndex = findWordIndex(randomWord);
-      const challengerGameData = JSON.stringify(roundsData);
-      const stringUrl = qs.stringify({ wordIndex, challengerGameData });
-      return `${document.location.origin}${homeUrl}?${stringUrl}`;
-    },
-  };
-}
+import useChallenge from "./hooks/useChallenge";
 
 export default function App({
   challengerData,
