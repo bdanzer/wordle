@@ -1,16 +1,22 @@
 import { statuses } from "../../@types";
-import { getColor } from "../../util/getColor";
+import { getColor, selectedColor } from "../../util/getColor";
 
 function WordleBox({
   letter,
   status,
   miniBoard,
   showLetters = true,
+  onSelect,
+  selected,
+  pointer = false,
 }: {
   letter: string;
   status: statuses;
   miniBoard?: boolean;
   showLetters?: boolean;
+  onSelect?: () => void;
+  selected?: boolean;
+  pointer?: boolean;
 }) {
   return (
     <div
@@ -19,7 +25,11 @@ function WordleBox({
         height: miniBoard ? 30 : 69,
         width: miniBoard ? 30 : 69,
         fontSize: miniBoard ? 12 : 35,
-        transition: status === "pending" ? ".5s ease" : "2s ease",
+        transition: selected
+          ? ".25s ease"
+          : status === "pending"
+          ? ".5s ease"
+          : "2s ease",
         background: getColor(status),
         // border: "2px solid white",
         margin: miniBoard ? 1 : 2,
@@ -28,7 +38,9 @@ function WordleBox({
         justifyContent: "center",
         alignItems: "center",
         textTransform: "uppercase",
+        ...(pointer && { cursor: "pointer" }),
       }}
+      onClick={() => onSelect?.()}
     >
       {showLetters ? letter : ""}
     </div>

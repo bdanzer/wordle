@@ -1,4 +1,4 @@
-import { Rounds } from "../../@types";
+import { Rounds, WordBoxValues } from "../../@types";
 import Button from "../Button/Button";
 import WordleBox from "../wordle-box/wordle-box";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -106,6 +106,7 @@ function Divider() {
 
 function GameBoard({
   roundsData,
+  activeRound,
   challengerData,
   isGameLost,
   isGameWon,
@@ -116,8 +117,11 @@ function GameBoard({
   showLetters = true,
   wordleWord,
   emojis,
+  onWordBoxSelected,
+  selectedWordBox,
 }: {
   roundsData?: Rounds | null;
+  activeRound?: number;
   challengerData?: Rounds | null;
   onChallenge?: () => void;
   onStartOver?: () => void;
@@ -128,8 +132,16 @@ function GameBoard({
   showLetters?: boolean;
   wordleWord?: string;
   emojis?: string;
+  onWordBoxSelected?: (obj: WordBoxValues) => void;
+  selectedWordBox?: WordBoxValues;
 }) {
   const isChallenged = Boolean(challengerData);
+  const handleWordBoxSelect = (roundRowIndex: number, wordBoxIndex: number) => {
+    onWordBoxSelected?.({
+      roundRowIndex,
+      wordBoxIndex,
+    });
+  };
   return (
     <div
       style={{
@@ -218,13 +230,25 @@ function GameBoard({
           </div>
         </MiniModal>
       )}
-      {roundsData?.map((guess, i) => (
-        <div key={i} style={{ display: "flex" }}>
-          {guess.map((hi, i) => (
+      {roundsData?.map((row, roundRowIndex) => (
+        <div key={roundRowIndex} style={{ display: "flex" }}>
+          {row.map((letterData, i) => (
             <WordleBox
               key={i}
-              letter={hi.letter}
-              status={hi.status}
+              onSelect={() => {
+                if (activeRound === roundRowIndex) {
+                  console.log("clicked");
+                  handleWordBoxSelect(roundRowIndex, i);
+                }
+              }}
+              pointer={roundRowIndex === activeRound}
+              selected={
+                selectedWordBox?.roundRowIndex === roundRowIndex &&
+                selectedWordBox.wordBoxIndex === i &&
+                roundRowIndex === activeRound
+              }
+              letter={letterData.letter}
+              status={letterData.status}
               showLetters={showLetters}
               miniBoard={miniBoard}
             />

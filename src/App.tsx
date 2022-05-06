@@ -15,7 +15,7 @@ import {
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
-import { Rounds } from "./@types";
+import { Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import { useLocation } from "react-router";
 
@@ -109,6 +109,7 @@ export default function App({
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   console.log("currentRound", currentRound);
   console.log("wordleWord", wordleWord);
+  console.log("Rounds Data", roundsData);
 
   const flattenedRounds = flatten(roundsData);
 
@@ -131,6 +132,29 @@ export default function App({
     console.log(stringifiedRoundsData);
     const link = challengeLink(roundsData, wordleWord);
     console.log("link", link);
+  };
+
+  const handleWordBoxSelected = (wordBoxValues: WordBoxValues) => {
+    console.log("running", wordBoxValues);
+    setRoundsData(
+      produce((draftState) => {
+        // draftState[wordBoxValues.roundRowIndex].forEach(item => {
+
+        // })
+        const selectedItem =
+          draftState[wordBoxValues.roundRowIndex][wordBoxValues.wordBoxIndex];
+
+        if (selectedItem.status === "selected" && selectedItem.letter) {
+          selectedItem.status = "locked";
+        } else if (selectedItem.status === "locked") {
+          selectedItem.status = 'pending';
+        } else if (selectedItem.status === "selected" && !selectedItem.letter) {
+          selectedItem.status = "none";
+        } else {
+          selectedItem.status = "selected";
+        }
+      })
+    );
   };
 
   const handleLetter = (e?: KeyboardEvent | null, letter?: string) => {
@@ -178,20 +202,38 @@ export default function App({
           });
         } else if (!isEnter) {
           if (!isBackspace) {
-            const selectedItem = currentRoundItems.find(
-              (thing) => thing.status === "none"
+            const selectedStatusItem = currentRoundItems.find(
+              (letterData) => letterData.status === "selected"
+            );
+            const selectedNoneItem = currentRoundItems.find(
+              (letterData) => letterData.status === "none"
             );
 
-            if (selectedItem) {
-              selectedItem.letter = key;
-              selectedItem.status = "pending";
+            if (selectedStatusItem) {
+              selectedStatusItem.letter = key;
+              selectedStatusItem.status = "pending";
+            } else if (selectedNoneItem) {
+              selectedNoneItem.letter = key;
+              selectedNoneItem.status = "pending";
             }
           } else {
+            let deletedSelected = false;
+            // Loop and delete selected in reverse order first, could turn this into a recursion call for a fancier cleaner function
             for (let i = currentRoundItems.length - 1; i >= 0; i--) {
-              if (currentRoundItems[i].status === "pending") {
+              if (currentRoundItems[i].status === "selected") {
                 currentRoundItems[i].status = "none";
                 currentRoundItems[i].letter = "";
+                deletedSelected = true;
                 break;
+              }
+            }
+            if (!deletedSelected) {
+              for (let i = currentRoundItems.length - 1; i >= 0; i--) {
+                if (currentRoundItems[i].status === "pending") {
+                  currentRoundItems[i].status = "none";
+                  currentRoundItems[i].letter = "";
+                  break;
+                }
               }
             }
           }
@@ -229,6 +271,7 @@ export default function App({
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}
+          activeRound={currentRound}
           challengerData={challengerData}
           isGameWon={isGameWon}
           isGameLost={isGameLost}
@@ -237,6 +280,7 @@ export default function App({
           challengeLink={challengeLink(roundsData, wordleWord)}
           wordleWord={wordleWord}
           emojis={emojis}
+          onWordBoxSelected={handleWordBoxSelected}
         />
       </div>
       <Keyboard
