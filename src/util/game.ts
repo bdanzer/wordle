@@ -150,7 +150,7 @@ export function deleteLetters(
 
     for (let i = currentRoundItems.length - 1; i >= 0; i--) {
       if (currentRoundItems[i].status === status) {
-        currentRoundItems[i].status = "none";
+        currentRoundItems[i].status = status ==='selected' && currentRoundItems[i].letter ? 'selected' : "none";
         currentRoundItems[i].letter = "";
         deletedSelected = true;
         return true;

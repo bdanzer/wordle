@@ -32,7 +32,9 @@ function WordleBox({
         width: miniBoard ? 30 : width || 69,
         fontSize: miniBoard ? 12 : 35,
         transition:
-          selected || hasPriority
+          status === "none"
+            ? "0.1s ease"
+            : selected || hasPriority
             ? ".25s ease"
             : status === "pending"
             ? ".5s ease"
