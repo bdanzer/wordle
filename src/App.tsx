@@ -130,6 +130,11 @@ export default function App({
             letterData.status = status;
             if (status === "green") {
               winChecker++;
+            } else {
+              if (nextRoundLetters && nextRoundLetters[i].letter) {
+                nextRoundLetters[i].letter = "";
+                nextRoundLetters[i].status = "none";
+              }
             }
           });
 

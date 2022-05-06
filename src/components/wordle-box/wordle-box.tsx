@@ -49,6 +49,9 @@ function WordleBox({
         textTransform: "uppercase",
         ...(pointer && { cursor: "pointer" }),
         // ...(hasPriority && { boxShadow: "inset 0 -2px 0 red" }),
+        ...(status === "locked" && {
+          boxShadow: "#229954 0px 0px 0px 4px inset",
+        }),
         ...(hasPriority && { boxShadow: "#2980B9 0px 0px 0px 4px inset" }),
       }}
       onClick={() => onSelect?.()}
