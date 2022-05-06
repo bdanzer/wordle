@@ -1,7 +1,7 @@
 import produce from "immer";
 import { flatten, trim } from "lodash";
 import { useEffect, useState } from "react";
-import "./styles.css";
+import { Helmet } from "react-helmet";
 import wordleList from "./wordleList.json";
 import {
   acceptedInputs,
@@ -15,6 +15,8 @@ import Keyboard from "./components/keyboard/keyboard";
 import { Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import useChallenge from "./hooks/useChallenge";
+
+import "./styles.css";
 
 export default function App({
   challengerData,
@@ -31,6 +33,7 @@ export default function App({
   const [isNotAWord, setNotAWord] = useState(false);
   const [isGameWon, setGameWon] = useState(false);
   const [isGameLost, setGameLost] = useState(false);
+  const [title, setTitle] = useState("A Wordle Challenge Game!");
   const { generateChallengeLink } = useChallenge();
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
@@ -180,6 +183,10 @@ export default function App({
 
   return (
     <div className="App">
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content="Send Wordle Challenges" />
+      </Helmet>
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}
