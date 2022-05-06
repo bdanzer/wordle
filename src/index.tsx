@@ -32,8 +32,6 @@ function Router() {
     ? parseInt(searchParams.get("wordIndex") ?? "")
     : null;
 
-  // const randomWordleWord = getRandomWord("abbot");
-  // const randomWordleWord = getRandomWord("emmet");
   const randomWordleWord = getRandomWord(null, wordIndex);
 
   const [wordleWord, setRandomWordleWord] = useState(randomWordleWord);

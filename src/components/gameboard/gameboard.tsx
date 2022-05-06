@@ -11,7 +11,6 @@ function MiniModal({ children }: { children: ReactNode }) {
   return (
     <div
       style={{
-        // background: "rgb(0 0 0 / 90%)",
         background: "white",
         position: "absolute",
         height: "calc(100% - 32px)",
@@ -218,7 +217,6 @@ function GameBoard({
   return (
     <div
       style={{
-        // display: "flex",
         width: "100%",
         flexWrap: "wrap",
         justifyContent: "center",
@@ -226,7 +224,6 @@ function GameBoard({
         maxWidth: miniBoard ? 160 : 365,
         margin: "auto",
         marginTop: 20,
-        // alignItems: "center"
       }}
     >
       {!miniBoard && (

@@ -94,6 +94,8 @@ export default function App({
   const { generateChallengeLink } = useChallenge();
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
+  const currentWord = buildWord(roundsData[currentRound]);
+
   console.log("currentRound", currentRound);
   console.log("wordleWord", wordleWord);
   console.log("Rounds Data", roundsData);
@@ -112,8 +114,6 @@ export default function App({
     .filter((thing) => thing.status === "wrong")
     .map((letters) => letters.letter);
 
-  const word = buildWord(roundsData[currentRound]);
-
   const handleChallenge = () => {
     const stringifiedRoundsData = JSON.stringify(roundsData);
     const link = generateChallengeLink(roundsData, wordleWord);
@@ -123,17 +123,23 @@ export default function App({
     console.log("running", wordBoxValues);
     setRoundsData(
       produce((draftState) => {
-        const selectedItem =
+        const selectedLetterBox =
           draftState[wordBoxValues.roundRowIndex][wordBoxValues.wordBoxIndex];
 
-        if (selectedItem.status === "selected" && selectedItem.letter) {
-          selectedItem.status = "locked";
-        } else if (selectedItem.status === "locked") {
-          selectedItem.status = "pending";
-        } else if (selectedItem.status === "selected" && !selectedItem.letter) {
-          selectedItem.status = "none";
+        if (
+          selectedLetterBox.status === "selected" &&
+          selectedLetterBox.letter
+        ) {
+          selectedLetterBox.status = "locked";
+        } else if (selectedLetterBox.status === "locked") {
+          selectedLetterBox.status = "pending";
+        } else if (
+          selectedLetterBox.status === "selected" &&
+          !selectedLetterBox.letter
+        ) {
+          selectedLetterBox.status = "none";
         } else {
-          selectedItem.status = "selected";
+          selectedLetterBox.status = "selected";
         }
       })
     );
@@ -150,8 +156,6 @@ export default function App({
     // Basic validation for the accepted inputs
     if (![...acceptedInputs, "Enter"].includes(key)) return;
 
-    //Steps:
-
     setRoundsData(
       produce((draftState) => {
         const currentRoundItems = draftState[currentRound];
@@ -163,8 +167,12 @@ export default function App({
           let winChecker = 0;
 
           //Add statuses to words
-          currentRoundItems.forEach((item, i) => {
-            item.status = getItemStatus(wordleWord, guessedWord, i);
+          currentRoundItems.forEach((letterData, i) => {
+            const status = getItemStatus(wordleWord, guessedWord, i);
+            letterData.status = status;
+            if (status === "green") {
+              winChecker++;
+            }
           });
 
           // Set correct rounds as we enter
@@ -253,7 +261,7 @@ export default function App({
         yellowLetters={yellowLetters}
         failedLetters={failedLetters}
         notAWord={isNotAWord}
-        wordComplete={word.length === 5}
+        wordComplete={currentWord.length === 5}
       />
     </div>
   );
