@@ -131,26 +131,24 @@ function CompletedModalContent({
         >
           Start New Game
         </Button>
-        {!isGameLost && !isChallenged && (
-          <CopyToClipboard
-            text={challengeLink || ""}
-            onCopy={() => setChallengeLinkCopied(true)}
+        <CopyToClipboard
+          text={challengeLink || ""}
+          onCopy={() => setChallengeLinkCopied(true)}
+        >
+          <Button
+            condensed
+            style={{
+              marginBottom: 6,
+            }}
+            fullWidth
+            backgroundColor={isChallengeLinkCopied ? green : black}
+            onClick={() => onChallenge?.()}
           >
-            <Button
-              condensed
-              style={{
-                marginBottom: 6,
-              }}
-              fullWidth
-              backgroundColor={isChallengeLinkCopied ? green : black}
-              onClick={() => onChallenge?.()}
-            >
-              {isChallengeLinkCopied
-                ? "Copied Challenge Link"
-                : "Copy Challenge Link"}
-            </Button>
-          </CopyToClipboard>
-        )}
+            {isChallengeLinkCopied
+              ? "Copied Challenge Link"
+              : "Copy Challenge Link"}
+          </Button>
+        </CopyToClipboard>
         <CopyToClipboard
           text={emojis || ""}
           onCopy={() => setEmojiCopied(true)}
