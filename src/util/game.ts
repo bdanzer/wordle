@@ -54,8 +54,8 @@ const COLOR_NOT_ANY_SPOT  = "wrong";
 // After each guess, the color of the tiles will change.
 // Green:   The letter is in the word and in the correct spot.   
 // Yellow:  The letter is in the word but in the wrong spot.   
-// Gray:    The letter is not in the word in any spot.   
-export function guessColor(word: string, guess: string, index: number): statuses {
+// Wrong:    The letter is not in the word in any spot.   
+export function getItemStatus(word: string, guess: string, index: number): statuses {
     // correct (matched) index letter
     if (guess[index] === word[index]) {
         return COLOR_CORRECT_SPOT;
@@ -86,7 +86,6 @@ export function guessColor(word: string, guess: string, index: number): statuses
         }
     }
 
-    // otherwise not any
     return COLOR_NOT_ANY_SPOT;
 }
 
@@ -112,4 +111,26 @@ export const handleDoubleLetters = (wordleWord: string, currentLetter: string, g
   } 
 
   return 'yellow'
+}
+
+export function deleteLetters(currentRoundItems: WritableDraft<GuessPattern>[]) {
+  return (
+    status: "selected" | "pending" = "selected"
+  ) => {
+    let deletedSelected = false;
+
+    for (let i = currentRoundItems.length - 1; i >= 0; i--) {
+      if (currentRoundItems[i].status === status) {
+        currentRoundItems[i].status = "none";
+        currentRoundItems[i].letter = "";
+        deletedSelected = true;
+        return true;
+      }
+    }
+
+    // trying to delete selected letters first
+    if (!deletedSelected && status === 'selected') {
+      deleteLetters(currentRoundItems)("pending")
+    }
+  };
 }

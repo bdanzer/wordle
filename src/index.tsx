@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as ReactDOMClient from "react-dom/client";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 import { useParams } from "react-router";

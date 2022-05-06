@@ -1,16 +1,15 @@
 import produce from "immer";
-import { uniq, flatten, unionBy, trim } from "lodash";
+import { flatten, trim } from "lodash";
 import { useEffect, useState } from "react";
 import "./styles.css";
 import wordleList from "./wordleList.json";
-import { getColor } from "./util/getColor";
 import qs from "query-string";
 import {
   acceptedInputs,
   buildWord,
+  deleteLetters,
   findWordIndex,
-  getRandomWord,
-  guessColor,
+  getItemStatus,
   homeUrl,
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
@@ -18,13 +17,6 @@ import Keyboard from "./components/keyboard/keyboard";
 import { Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import { useLocation } from "react-router";
-
-// abbot (the word)
-// toast (the guess, and messes up)
-// bobby messes up
-
-// pryce
-// soare messes up (no r detected)
 
 const initStatus: Rounds = [
   [
@@ -71,15 +63,10 @@ const initStatus: Rounds = [
   ],
 ];
 
-// const wordleWord =
-//   wordleList[Math.floor(Math.random() * wordleList.length - 1)];
-// const wordleWord = getRandomWord("abbot");
-// const wordleWord = "pryce";
-
 function useChallenge() {
   const location = useLocation();
   return {
-    challengeLink: (roundsData: Rounds, randomWord: string) => {
+    generateChallengeLink: (roundsData: Rounds, randomWord: string) => {
       console.log("location", location);
       const wordIndex = findWordIndex(randomWord);
       const challengerGameData = JSON.stringify(roundsData);
@@ -104,7 +91,7 @@ export default function App({
   const [isNotAWord, setNotAWord] = useState(false);
   const [isGameWon, setGameWon] = useState(false);
   const [isGameLost, setGameLost] = useState(false);
-  const { challengeLink } = useChallenge();
+  const { generateChallengeLink } = useChallenge();
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   console.log("currentRound", currentRound);
@@ -129,25 +116,20 @@ export default function App({
 
   const handleChallenge = () => {
     const stringifiedRoundsData = JSON.stringify(roundsData);
-    console.log(stringifiedRoundsData);
-    const link = challengeLink(roundsData, wordleWord);
-    console.log("link", link);
+    const link = generateChallengeLink(roundsData, wordleWord);
   };
 
   const handleWordBoxSelected = (wordBoxValues: WordBoxValues) => {
     console.log("running", wordBoxValues);
     setRoundsData(
       produce((draftState) => {
-        // draftState[wordBoxValues.roundRowIndex].forEach(item => {
-
-        // })
         const selectedItem =
           draftState[wordBoxValues.roundRowIndex][wordBoxValues.wordBoxIndex];
 
         if (selectedItem.status === "selected" && selectedItem.letter) {
           selectedItem.status = "locked";
         } else if (selectedItem.status === "locked") {
-          selectedItem.status = 'pending';
+          selectedItem.status = "pending";
         } else if (selectedItem.status === "selected" && !selectedItem.letter) {
           selectedItem.status = "none";
         } else {
@@ -159,35 +141,33 @@ export default function App({
 
   const handleLetter = (e?: KeyboardEvent | null, letter?: string) => {
     const key = trim(e?.key || letter);
-    const isBackspace = e?.key === "Backspace" || letter === "Backspace";
-    const isEnter = e?.key === "Enter" || letter === "Enter";
+    const isBackspace = key === "Backspace";
+    const isEnter = key === "Enter";
 
-    if (isGameWon || isGameLost) return;
+    // No need to continue if game is over or new specified key or letter
+    if (isGameWon || isGameLost || !key) return;
 
+    // Basic validation for the accepted inputs
     if (![...acceptedInputs, "Enter"].includes(key)) return;
+
+    //Steps:
 
     setRoundsData(
       produce((draftState) => {
         const currentRoundItems = draftState[currentRound];
 
-        let word = buildWord(currentRoundItems);
+        if (isEnter) {
+          const guessedWord = buildWord(currentRoundItems);
+          if (guessedWord.length !== 5) return;
 
-        if (isEnter && word.length === 5) {
           let winChecker = 0;
 
+          //Add statuses to words
           currentRoundItems.forEach((item, i) => {
-            const indexOfLetter = wordleWord.indexOf(item.letter);
-
-            if (wordleWord[i] === item.letter) {
-              winChecker++;
-              item.status = "green";
-            } else if (indexOfLetter !== -1) {
-              item.status = guessColor(wordleWord, word, i);
-            } else {
-              item.status = "wrong";
-            }
+            item.status = getItemStatus(wordleWord, guessedWord, i);
           });
 
+          // Set correct rounds as we enter
           setCurrentRound((prevRound) => {
             const nextRound = prevRound + 1;
             if (winChecker === 5) {
@@ -200,7 +180,8 @@ export default function App({
 
             return nextRound;
           });
-        } else if (!isEnter) {
+        } else {
+          // Handling the typing/deleting phase of the game
           if (!isBackspace) {
             const selectedStatusItem = currentRoundItems.find(
               (letterData) => letterData.status === "selected"
@@ -217,30 +198,13 @@ export default function App({
               selectedNoneItem.status = "pending";
             }
           } else {
-            let deletedSelected = false;
-            // Loop and delete selected in reverse order first, could turn this into a recursion call for a fancier cleaner function
-            for (let i = currentRoundItems.length - 1; i >= 0; i--) {
-              if (currentRoundItems[i].status === "selected") {
-                currentRoundItems[i].status = "none";
-                currentRoundItems[i].letter = "";
-                deletedSelected = true;
-                break;
-              }
-            }
-            if (!deletedSelected) {
-              for (let i = currentRoundItems.length - 1; i >= 0; i--) {
-                if (currentRoundItems[i].status === "pending") {
-                  currentRoundItems[i].status = "none";
-                  currentRoundItems[i].letter = "";
-                  break;
-                }
-              }
-            }
+            deleteLetters(currentRoundItems)("selected");
           }
 
-          word = buildWord(currentRoundItems);
+          const guessedWord = buildWord(currentRoundItems);
 
-          if (!wordleList.includes(word) && word.length === 5) {
+          // Finally check if the word is in the list after the letter has been added
+          if (!wordleList.includes(guessedWord) && guessedWord.length === 5) {
             setNotAWord(true);
             return;
           } else {
@@ -277,7 +241,7 @@ export default function App({
           isGameLost={isGameLost}
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
-          challengeLink={challengeLink(roundsData, wordleWord)}
+          challengeLink={generateChallengeLink(roundsData, wordleWord)}
           wordleWord={wordleWord}
           emojis={emojis}
           onWordBoxSelected={handleWordBoxSelected}
