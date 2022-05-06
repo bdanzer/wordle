@@ -67,7 +67,7 @@ function GameBoard({
         position: "relative",
         maxWidth: miniBoard ? 160 : 365,
         margin: "auto",
-        marginTop: 20,
+        marginTop: miniBoard ? 0 : 20,
       }}
     >
       {!miniBoard && (

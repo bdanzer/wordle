@@ -20,6 +20,6 @@ export const emojiCreation = (roundsData: Rounds) => {
     });
     str += "\n";
   });
-  console.log("str", str);
+  console.log(str);
   return str;
 };
