@@ -12,14 +12,14 @@ function BackSpaceKey({
     <div
       onClick={() => onLetterSelection("Backspace")}
       style={{
-        height: 50,
+        height: 58,
         width: 60,
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         margin: 2.5,
-        marginRight: -10,
+        marginRight: -16,
         borderRadius: 6,
         backgroundColor: gray,
         color: "white",
@@ -46,7 +46,7 @@ function LetterKey({
       onClick={() => onLetterSelection(letter)}
       key={letter}
       style={{
-        height: 50,
+        height: 58,
         width: 34,
         cursor: "pointer",
         display: "flex",

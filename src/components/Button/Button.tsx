@@ -17,7 +17,7 @@ function Button({
       style={{
         ...style,
         marginTop: 8,
-        transition: "1s ease",
+        transition: ".5s ease",
         border: "none",
         padding: "15px 15px",
         backgroundColor,
