@@ -31,7 +31,6 @@ function Router() {
   const wordIndex = searchParams.get("wordIndex")
     ? parseInt(searchParams.get("wordIndex") ?? "")
     : null;
-  console.log("params", params, location, challengerGameData, wordIndex);
 
   // const randomWordleWord = getRandomWord("abbot");
   // const randomWordleWord = getRandomWord("emmet");

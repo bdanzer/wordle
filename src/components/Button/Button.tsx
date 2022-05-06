@@ -4,11 +4,15 @@ function Button({
   children,
   backgroundColor,
   style,
+  fullWidth,
+  condensed,
   ...otherProps
 }: {
   children: ReactNode;
   backgroundColor: string;
   style?: CSSProperties;
+  fullWidth?: boolean;
+  condensed?: boolean;
   [key: string]: any;
 }) {
   return (
@@ -18,7 +22,7 @@ function Button({
         ...style,
         transition: ".5s ease",
         border: "none",
-        padding: "15px 19px",
+        padding: condensed ? "10px 19px" : "15px 19px",
         backgroundColor,
         borderRadius: 6,
         textTransform: "uppercase",
@@ -27,6 +31,7 @@ function Button({
         letterSpacing: "1.25px",
         color: "white",
         cursor: "pointer",
+        ...(fullWidth && { width: "100%" }),
       }}
     >
       {children}

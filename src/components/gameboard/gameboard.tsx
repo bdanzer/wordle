@@ -3,7 +3,7 @@ import Button from "../Button/Button";
 import WordleBox from "../wordle-box/wordle-box";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ReactNode, useEffect, useState } from "react";
-import { black, green } from "../../util/getColor";
+import { black, green, pending } from "../../util/getColor";
 import { useNavigate } from "react-router";
 import { homeUrl } from "../../util/game";
 
@@ -25,6 +25,7 @@ function MiniModal({
   emojis?: string;
 }) {
   const [state, setState] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (state) {
@@ -46,29 +47,60 @@ function MiniModal({
       }}
     >
       {children}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        {!isChallenged && (
-          <Button backgroundColor="gray" onClick={() => onStartOver?.()}>
-            New Game
-          </Button>
-        )}
+      <div>
+        <Button
+          style={{
+            marginBottom: 6,
+          }}
+          fullWidth
+          backgroundColor={black}
+          onClick={() => {
+            onStartOver?.();
+            navigate(homeUrl, { replace: true });
+          }}
+          condensed
+        >
+          Start New Game
+        </Button>
         {!isGameLost && !isChallenged && (
           <CopyToClipboard
             text={challengeLink || ""}
             onCopy={() => setState(true)}
           >
-            <Button backgroundColor="gray" onClick={() => onChallenge?.()}>
-              {state ? "Copied Game Link" : "Challenge"}
+            <Button
+              condensed
+              style={{
+                marginBottom: 6,
+              }}
+              fullWidth
+              backgroundColor={black}
+              onClick={() => onChallenge?.()}
+            >
+              {state ? "Copied Game Link" : "Copy Challenge Link"}
             </Button>
           </CopyToClipboard>
         )}
         <CopyToClipboard text={emojis || ""} onCopy={() => setState(true)}>
-          <Button backgroundColor="gray" onClick={() => onChallenge?.()}>
-            {state ? "Copied" : "Copy "}
+          <Button
+            condensed
+            style={{
+              marginBottom: 6,
+            }}
+            fullWidth
+            backgroundColor={black}
+            onClick={() => onChallenge?.()}
+          >
+            {state ? "Copied" : "Copy Emoji Board"}
           </Button>
         </CopyToClipboard>
       </div>
     </div>
+  );
+}
+
+function Divider() {
+  return (
+    <div style={{ height: 2, background: pending, margin: "12px 0" }}></div>
   );
 }
 
@@ -97,7 +129,6 @@ function GameBoard({
   wordleWord?: string;
   emojis?: string;
 }) {
-  const navigate = useNavigate();
   const isChallenged = Boolean(challengerData);
   return (
     <div
@@ -121,11 +152,13 @@ function GameBoard({
           isChallenged={isChallenged}
           emojis={emojis}
         >
-          <div>
+          <div style={{ marginBottom: 6 }}>
             <span
               style={{
                 color: black,
-                marginBottom: 12,
+                marginBottom: 6,
+                fontWeight: 700,
+                fontStyle: "italic",
                 display: "block",
                 textTransform: "uppercase",
               }}
@@ -136,17 +169,21 @@ function GameBoard({
               <span
                 style={{
                   color: black,
-                  marginBottom: 12,
                   display: "inline-block",
                 }}
               >
                 You Completed the game
               </span>
             )}
+            <Divider />
             {isChallenged ? (
               <div>
                 <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: 6,
+                  }}
                 >
                   <div>
                     <span
@@ -173,19 +210,11 @@ function GameBoard({
                     <GameBoard roundsData={challengerData} miniBoard />
                   </div>
                 </div>
-                <Button
-                  backgroundColor={green}
-                  onClick={() => {
-                    navigate(homeUrl, { replace: true });
-                    onStartOver?.();
-                  }}
-                >
-                  Play New Game
-                </Button>
               </div>
             ) : (
               <GameBoard roundsData={roundsData} miniBoard />
             )}
+            <Divider />
           </div>
         </MiniModal>
       )}
