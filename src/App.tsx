@@ -109,42 +109,34 @@ export default function App({
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   console.log("currentRound", currentRound);
   console.log("wordleWord", wordleWord);
+
   const flattenedRounds = flatten(roundsData);
+
   const greenLetters = flattenedRounds
     .filter((thing) => thing.status === "green")
     .map((letters) => letters.letter);
+
   const yellowLetters = flattenedRounds
     .filter((thing) => thing.status === "yellow")
     .map((letters) => letters.letter);
+
   const failedLetters = flattenedRounds
     .filter((thing) => thing.status === "wrong")
     .map((letters) => letters.letter);
 
-  const letters = uniq(
-    unionBy(
-      flattenedRounds.filter(
-        (guess) => guess.status !== "pending" && guess.status !== "none"
-      ),
-      (item) => item.letter
-    )
-  );
   const word = buildWord(roundsData[currentRound]);
-  console.log("word here", word);
+
+  const handleChallenge = () => {
+    const stringifiedRoundsData = JSON.stringify(roundsData);
+    console.log(stringifiedRoundsData);
+    const link = challengeLink(roundsData, wordleWord);
+    console.log("link", link);
+  };
 
   const handleLetter = (e?: KeyboardEvent | null, letter?: string) => {
     const key = trim(e?.key || letter);
-    console.log(key);
-
-    console.log(e?.keyCode);
-    const isBackspace = e?.keyCode === 8 || letter === "Backspace";
-    const isEnter = e?.keyCode === 13 || letter === "Enter";
-
-    // const reg = new RegExp();
-
-    // console.log(e.key.match(/g{1}[a-z][A-Z]/));
-
-    // if (isEnter) return;
-    console.log("callback", key, key !== "Enter", isEnter);
+    const isBackspace = e?.key === "Backspace" || letter === "Backspace";
+    const isEnter = e?.key === "Enter" || letter === "Enter";
 
     if (isGameWon || isGameLost) return;
 
@@ -199,7 +191,6 @@ export default function App({
               if (currentRoundItems[i].status === "pending") {
                 currentRoundItems[i].status = "none";
                 currentRoundItems[i].letter = "";
-                // return;
                 break;
               }
             }
@@ -213,10 +204,6 @@ export default function App({
           } else {
             setNotAWord(false);
           }
-
-          console.log("WORD TROUBLE", word, wordleList.includes(word));
-
-          console.log("word", word);
         }
       })
     );
@@ -229,22 +216,12 @@ export default function App({
     };
   }, [currentRound, isGameLost, isGameLost, wordleWord]);
 
-  console.log("roundsData", roundsData);
-
-  const handleChallenge = () => {
-    const stringifiedRoundsData = JSON.stringify(roundsData);
-    console.log(stringifiedRoundsData);
-    const link = challengeLink(roundsData, wordleWord);
-    console.log("link", link);
-  };
-
   const handleStartOver = () => {
     setGameWon(false);
     setGameLost(false);
     setCurrentRound(0);
     setRoundsData(initStatus);
     newWordleWord();
-    console.log("handleStartOver");
   };
 
   return (
