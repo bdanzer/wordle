@@ -94,6 +94,7 @@ function GameBoard({
         <MiniModal>
           <CompletedModalContent
             roundsData={roundsData}
+            challengerData={challengerData}
             isGameWon={isGameWon}
             isChallenged={isChallenged}
             wordleWord={wordleWord}

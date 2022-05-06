@@ -42,6 +42,7 @@ export default function App({
   console.log("Current Round", currentRound);
   console.log("Wordle Word", wordleWord);
   console.log("Rounds Data", roundsData);
+  console.log("Challenger Data", challengerData);
 
   const flattenedRounds = flatten(roundsData);
 
