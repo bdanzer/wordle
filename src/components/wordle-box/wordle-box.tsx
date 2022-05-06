@@ -9,6 +9,8 @@ function WordleBox({
   onSelect,
   selected,
   pointer = false,
+  width,
+  margin,
 }: {
   letter: string;
   status: statuses;
@@ -17,13 +19,15 @@ function WordleBox({
   onSelect?: () => void;
   selected?: boolean;
   pointer?: boolean;
+  width?: number;
+  margin?: number;
 }) {
   return (
     <div
       style={{
         borderRadius: miniBoard ? 4 : 6,
-        height: miniBoard ? 30 : 69,
-        width: miniBoard ? 30 : 69,
+        height: miniBoard ? 30 : width || 69,
+        width: miniBoard ? 30 : width || 69,
         fontSize: miniBoard ? 12 : 35,
         transition: selected
           ? ".25s ease"
@@ -32,7 +36,7 @@ function WordleBox({
           : "2s ease",
         background: getColor(status),
         // border: "2px solid white",
-        margin: miniBoard ? 1 : 2,
+        margin: miniBoard ? 1 : margin || 2,
         color: "white",
         display: "flex",
         justifyContent: "center",

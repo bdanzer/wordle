@@ -47,7 +47,8 @@ function LetterKey({
       key={letter}
       style={{
         height: 58,
-        width: 34,
+        maxWidth: 34,
+        flex: 1,
         cursor: "pointer",
         display: "flex",
         justifyContent: "center",
@@ -95,7 +96,7 @@ function Keyboard({
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: 375, margin: "auto" }}>
       <div
         style={{
           display: "flex",

@@ -58,6 +58,10 @@ function GameBoard({
       wordBoxIndex,
     });
   };
+  const windowWidth = window.innerWidth > 375 ? 375 : window.innerWidth;
+  const marginToAccount = 5 * 2;
+  const boxMargins = 2.5;
+  const boxWidths = (windowWidth - (marginToAccount + boxMargins * 2)) / 5;
   return (
     <div
       style={{
@@ -122,6 +126,8 @@ function GameBoard({
               status={letterData.status}
               showLetters={showLetters}
               miniBoard={miniBoard}
+              width={boxWidths}
+              margin={boxMargins}
             />
           ))}
         </div>
