@@ -7,7 +7,6 @@ function useChallenge() {
   const location = useLocation();
   return {
     generateChallengeLink: (roundsData: Rounds, randomWord: string) => {
-      console.log("location", location);
       const wordIndex = findWordIndex(randomWord);
       const challengerGameData = JSON.stringify(roundsData);
       const stringUrl = qs.stringify({ wordIndex, challengerGameData });

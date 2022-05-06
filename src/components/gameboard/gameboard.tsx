@@ -112,7 +112,6 @@ function GameBoard({
               key={i}
               onSelect={() => {
                 if (activeRound === roundRowIndex) {
-                  console.log("clicked");
                   handleWordBoxSelect(roundRowIndex, i);
                 }
               }}

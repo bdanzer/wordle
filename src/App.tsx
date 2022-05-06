@@ -36,8 +36,8 @@ export default function App({
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   const currentWord = buildWord(roundsData[currentRound]);
 
-  console.log("currentRound", currentRound);
-  console.log("wordleWord", wordleWord);
+  console.log("Current Round", currentRound);
+  console.log("Wordle Word", wordleWord);
   console.log("Rounds Data", roundsData);
 
   const flattenedRounds = flatten(roundsData);
