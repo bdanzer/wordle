@@ -144,16 +144,25 @@ export default function App({
         } else {
           // Handling the typing/deleting phase of the game
           if (!isBackspace) {
-            const selectedStatusItem = currentRoundItems.find(
-              (letterData) => letterData.status === "selected"
-            );
+            const selectedStatusItem =
+              currentRoundItems.find(
+                (letterData) =>
+                  letterData.status === "selected" && !letterData.letter
+              ) ||
+              currentRoundItems.find(
+                (letterData) => letterData.status === "selected"
+              );
             const selectedNoneItem = currentRoundItems.find(
               (letterData) => letterData.status === "none"
             );
 
             if (selectedStatusItem) {
+              if (!selectedStatusItem.letter) {
+                selectedStatusItem.status = "selected";
+              } else {
+                selectedStatusItem.status = "pending";
+              }
               selectedStatusItem.letter = key;
-              selectedStatusItem.status = "pending";
             } else if (selectedNoneItem) {
               selectedNoneItem.letter = key;
               selectedNoneItem.status = "pending";
