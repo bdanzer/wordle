@@ -106,12 +106,21 @@ export default function App({
 
         if (isEnter) {
           const guessedWord = buildWord(currentRoundItems);
-          if (guessedWord.length !== 5) return;
+          if (guessedWord.length !== 5 || !wordleList.includes(guessedWord))
+            return;
 
           let winChecker = 0;
+          const nextRoundLetters =
+            currentRound + 1 > 5 ? null : draftState[currentRound + 1];
 
           //Add statuses to words
           currentRoundItems.forEach((letterData, i) => {
+            // retain locked letters for next round
+            if (letterData.status === "locked" && nextRoundLetters) {
+              nextRoundLetters[i].letter = letterData.letter;
+              nextRoundLetters[i].status = letterData.status;
+            }
+
             const status = getItemStatus(wordleWord, guessedWord, i);
             letterData.status = status;
             if (status === "green") {
