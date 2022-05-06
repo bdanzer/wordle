@@ -3,7 +3,7 @@ import Button from "../Button/Button";
 import WordleBox from "../wordle-box/wordle-box";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { ReactNode, useEffect, useState } from "react";
-import { black, pending } from "../../util/getColor";
+import { black, green, pending } from "../../util/getColor";
 import { useNavigate } from "react-router";
 import { homeUrl } from "../../util/game";
 
@@ -54,14 +54,21 @@ function CompletedModalContent({
   isGameLost?: boolean;
   emojis?: string;
 }) {
-  const [state, setState] = useState(false);
+  const [isChallengeLinkCopied, setChallengeLinkCopied] = useState(false);
+  const [isEmojiCopied, setEmojiCopied] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (state) {
-      setTimeout(() => setState(false), 2000);
+    if (isChallengeLinkCopied) {
+      setTimeout(() => setChallengeLinkCopied(false), 1500);
     }
-  }, [state]);
+  }, [isChallengeLinkCopied]);
+
+  useEffect(() => {
+    if (isEmojiCopied) {
+      setTimeout(() => setEmojiCopied(false), 1500);
+    }
+  }, [isEmojiCopied]);
 
   return (
     <div style={{ marginBottom: 6 }}>
@@ -145,7 +152,7 @@ function CompletedModalContent({
         {!isGameLost && !isChallenged && (
           <CopyToClipboard
             text={challengeLink || ""}
-            onCopy={() => setState(true)}
+            onCopy={() => setChallengeLinkCopied(true)}
           >
             <Button
               condensed
@@ -153,24 +160,29 @@ function CompletedModalContent({
                 marginBottom: 6,
               }}
               fullWidth
-              backgroundColor={black}
+              backgroundColor={isChallengeLinkCopied ? green : black}
               onClick={() => onChallenge?.()}
             >
-              {state ? "Copied Game Link" : "Copy Challenge Link"}
+              {isChallengeLinkCopied
+                ? "Copied Challenge Link"
+                : "Copy Challenge Link"}
             </Button>
           </CopyToClipboard>
         )}
-        <CopyToClipboard text={emojis || ""} onCopy={() => setState(true)}>
+        <CopyToClipboard
+          text={emojis || ""}
+          onCopy={() => setEmojiCopied(true)}
+        >
           <Button
             condensed
             style={{
               marginBottom: 6,
             }}
             fullWidth
-            backgroundColor={black}
+            backgroundColor={isEmojiCopied ? green : black}
             onClick={() => onChallenge?.()}
           >
-            {state ? "Copied" : "Copy Emoji Board"}
+            {isEmojiCopied ? "Copied Emoji Board" : "Copy Emoji Board"}
           </Button>
         </CopyToClipboard>
       </div>
