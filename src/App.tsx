@@ -148,46 +148,15 @@ export default function App({
 
     if (isGameWon || isGameLost) return;
 
-    // if (!acceptedInputs.includes(key)) return;
+    if (![...acceptedInputs, "Enter"].includes(key)) return;
 
     setRoundsData(
       produce((draftState) => {
         const currentRoundItems = draftState[currentRound];
 
-        if (!isBackspace) {
-          const selectedItem = currentRoundItems.find(
-            (thing) => thing.status === "none"
-          );
+        let word = buildWord(currentRoundItems);
 
-          if (selectedItem) {
-            selectedItem.letter = key;
-            selectedItem.status = "pending";
-          }
-        } else {
-          for (let i = currentRoundItems.length - 1; i >= 0; i--) {
-            if (currentRoundItems[i].status === "pending") {
-              currentRoundItems[i].status = "none";
-              currentRoundItems[i].letter = "";
-              // return;
-              break;
-            }
-          }
-        }
-
-        const word = buildWord(currentRoundItems);
-
-        console.log("WORD TROUBLE", word, wordleList.includes(word));
-
-        console.log("word", word);
-
-        if (!wordleList.includes(word) && word.length === 5) {
-          setNotAWord(true);
-          return;
-        } else {
-          setNotAWord(false);
-        }
-
-        if (isEnter) {
+        if (isEnter && word.length === 5) {
           let winChecker = 0;
 
           currentRoundItems.forEach((item, i) => {
@@ -215,6 +184,39 @@ export default function App({
 
             return nextRound;
           });
+        } else if (!isEnter) {
+          if (!isBackspace) {
+            const selectedItem = currentRoundItems.find(
+              (thing) => thing.status === "none"
+            );
+
+            if (selectedItem) {
+              selectedItem.letter = key;
+              selectedItem.status = "pending";
+            }
+          } else {
+            for (let i = currentRoundItems.length - 1; i >= 0; i--) {
+              if (currentRoundItems[i].status === "pending") {
+                currentRoundItems[i].status = "none";
+                currentRoundItems[i].letter = "";
+                // return;
+                break;
+              }
+            }
+          }
+
+          word = buildWord(currentRoundItems);
+
+          if (!wordleList.includes(word) && word.length === 5) {
+            setNotAWord(true);
+            return;
+          } else {
+            setNotAWord(false);
+          }
+
+          console.log("WORD TROUBLE", word, wordleList.includes(word));
+
+          console.log("word", word);
         }
       })
     );
@@ -222,7 +224,6 @@ export default function App({
 
   useEffect(() => {
     document.addEventListener("keydown", handleLetter);
-
     return () => {
       document.removeEventListener("keydown", handleLetter);
     };
@@ -248,7 +249,6 @@ export default function App({
 
   return (
     <div className="App">
-      {/* <h2>Wordle Challenge</h2> */}
       <div style={{ marginBottom: 6 }}>
         <GameBoard
           roundsData={roundsData}
@@ -262,23 +262,6 @@ export default function App({
           emojis={emojis}
         />
       </div>
-      {/* {letters.map((letter) => (
-        <div
-          key={letter.letter}
-          style={{
-            background: getColor(letter.status),
-            display: "inline-block",
-            color: "white",
-            padding: 10,
-            margin: 2,
-            borderRadius: 6
-          }}
-        >
-          {letter.letter}
-        </div>
-      ))} */}
-      {/* <pre>{emojis}</pre>
-      {console.log(emojis)} */}
       <Keyboard
         onLetterSelection={(letter) => handleLetter(null, letter)}
         greenLetters={greenLetters}

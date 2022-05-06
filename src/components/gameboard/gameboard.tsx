@@ -127,6 +127,7 @@ function GameBoard({
                 color: black,
                 marginBottom: 12,
                 display: "block",
+                textTransform: "uppercase",
               }}
             >
               {wordleWord}
@@ -151,7 +152,7 @@ function GameBoard({
                     <span
                       style={{
                         color: black,
-                        marginBottom: 12,
+                        marginBottom: 6,
                         display: "inline-block",
                       }}
                     >
@@ -163,7 +164,7 @@ function GameBoard({
                     <span
                       style={{
                         color: black,
-                        marginBottom: 12,
+                        marginBottom: 6,
                         display: "inline-block",
                       }}
                     >

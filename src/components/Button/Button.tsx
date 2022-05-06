@@ -18,7 +18,7 @@ function Button({
         ...style,
         transition: ".5s ease",
         border: "none",
-        padding: "15px 15px",
+        padding: "15px 19px",
         backgroundColor,
         borderRadius: 6,
         textTransform: "uppercase",
