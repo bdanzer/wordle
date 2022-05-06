@@ -89,30 +89,6 @@ export function getItemStatus(word: string, guess: string, index: number): statu
     return COLOR_NOT_ANY_SPOT;
 }
 
-export const handleDoubleLetters = (wordleWord: string, currentLetter: string, guessedWord: string): statuses => {
-  let letterOccurancesInWordleWord = 0;
-  let letterOccurancesInGuessedWord = 0;
-  wordleWord.split('').forEach(wordleLetter => {
-    if (wordleLetter === currentLetter) {
-      letterOccurancesInWordleWord++
-    }
-  })
-
-  guessedWord.split('').forEach(guessedWordLetter => {
-    if (guessedWordLetter === currentLetter) {
-      letterOccurancesInGuessedWord++
-    }
-  })
-
-  if (letterOccurancesInWordleWord >= 2) {
-    wordleWord.split('').forEach(wordleLetter => {
-       
-    })
-  } 
-
-  return 'yellow'
-}
-
 export function deleteLetters(currentRoundItems: WritableDraft<GuessPattern>[]) {
   return (
     status: "selected" | "pending" = "selected"
