@@ -114,34 +114,27 @@ export default function App({
           if (guessedWord.length !== 5 || !wordleList.includes(guessedWord))
             return;
 
-          let winChecker = 0;
+          const isWin = guessedWord === wordleWord;
           const nextRoundLetters =
-            currentRound + 1 > 5 ? null : draftState[currentRound + 1];
+            currentRound + 1 > 5 || isWin ? null : draftState[currentRound + 1];
 
           //Add statuses to words
           currentRoundItems.forEach((letterData, i) => {
-            // retain locked letters for next round
-            if (letterData.status === "locked" && nextRoundLetters) {
-              nextRoundLetters[i].letter = letterData.letter;
-              nextRoundLetters[i].status = letterData.status;
-            }
-
+            const isLetterLocked = letterData.status === "locked";
             const status = getItemStatus(wordleWord, guessedWord, i);
+
             letterData.status = status;
-            if (status === "green") {
-              winChecker++;
-            } else {
-              if (nextRoundLetters && nextRoundLetters[i].letter) {
-                nextRoundLetters[i].letter = "";
-                nextRoundLetters[i].status = "none";
-              }
+
+            if (status === "green" && isLetterLocked && nextRoundLetters) {
+              nextRoundLetters[i].letter = letterData.letter;
+              nextRoundLetters[i].status = "locked";
             }
           });
 
           // Set correct rounds as we enter
           setCurrentRound((prevRound) => {
             const nextRound = prevRound + 1;
-            if (winChecker === 5) {
+            if (isWin) {
               setGameWon(true);
               return prevRound;
             } else if (nextRound > 5) {
@@ -154,6 +147,7 @@ export default function App({
         } else {
           // Handling the typing/deleting phase of the game
           if (!isBackspace) {
+            // TODO: Need to rework to pull from priority position function for a centralized spot
             const selectedStatusItem =
               currentRoundItems.find(
                 (letterData) =>

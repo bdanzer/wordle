@@ -150,6 +150,7 @@ export function deleteLetters(
 
     for (let i = currentRoundItems.length - 1; i >= 0; i--) {
       if (currentRoundItems[i].status === status) {
+        // TODO: Need to rework to pull from priority position function for a centralized spot
         currentRoundItems[i].status = status ==='selected' && currentRoundItems[i].letter ? 'selected' : "none";
         currentRoundItems[i].letter = "";
         deletedSelected = true;
