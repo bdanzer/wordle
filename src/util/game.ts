@@ -5,6 +5,7 @@ import {
   GameTypes,
   GuessPattern,
   LocalStorageNYT,
+  Outcome,
   Rounds,
   statuses,
 } from "../@types";
@@ -210,7 +211,7 @@ export const saveGame = (
   gameId: GameTypes = GameType.Official,
   rounds: Rounds,
   word: string,
-  outcome: "W" | "L"
+  outcome: Outcome
 ) => {
   if (gameId === GameType.Official) {
     const nytLocal = localStorage.getItem("NYT_Games");

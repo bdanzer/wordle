@@ -22,6 +22,11 @@ export enum GameType {
   Random = 'Random'
 }
 
+export enum Outcome {
+  W = 'W',
+  L = 'L'
+}
+
 export type GameTypes = GameType;
 
 export interface LocalStorageNYT {
@@ -29,5 +34,5 @@ export interface LocalStorageNYT {
   date: string;
   gameBoard: Rounds;
   word: string;
-  outcome: 'W' | 'L'
+  outcome: Outcome
 }

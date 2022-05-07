@@ -16,7 +16,7 @@ import {
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
-import { GameType, Rounds, WordBoxValues } from "./@types";
+import { GameType, Outcome, Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import useChallenge from "./hooks/useChallenge";
 import useUrlHelper from "./hooks/useUrlHelper";
@@ -213,13 +213,13 @@ export default function App({
 
   useEffect(() => {
     if (isGameWon) {
-      saveGame(gameId, roundsData, word, "W");
+      saveGame(gameId, roundsData, word, Outcome.W);
     }
   }, [isGameWon]);
 
   useEffect(() => {
     if (isGameLost) {
-      saveGame(gameId, roundsData, word, "L");
+      saveGame(gameId, roundsData, word, Outcome.L);
     }
   }, [isGameLost]);
 
@@ -251,8 +251,8 @@ export default function App({
           priorityBoxIndex={priorityBoxIndex}
           activeRound={currentRound}
           challengerData={challengerData}
-          isGameWon={localGame?.outcome === "W" || isGameWon}
-          isGameLost={localGame?.outcome === "L" || isGameLost}
+          isGameWon={localGame?.outcome === Outcome.W || isGameWon}
+          isGameLost={localGame?.outcome === Outcome.L || isGameLost}
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
           challengeLink={generateChallengeLink(roundsData, word)}
