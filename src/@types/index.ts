@@ -17,7 +17,12 @@ export interface WordBoxValues {
   wordBoxIndex: number;
 }
 
-export type GameTypes = "NYT" | "Random";
+export enum GameType {
+  Official = 'NYT',
+  Random = 'Random'
+}
+
+export type GameTypes = GameType;
 
 export interface LocalStorageNYT {
   id: string;

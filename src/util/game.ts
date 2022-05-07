@@ -1,6 +1,7 @@
 import { WritableDraft } from "immer/dist/internal";
 import { flattenDeep, uniqBy } from "lodash";
 import {
+  GameType,
   GameTypes,
   GuessPattern,
   LocalStorageNYT,
@@ -188,7 +189,7 @@ export const getOfficialWord = () => {
 };
 
 export const getLocalGame = (
-  gameType: GameTypes = "NYT"
+  gameType: GameTypes = GameType.Official
 ): LocalStorageNYT | null => {
   const nytLocal =
     gameType === "NYT" ? localStorage.getItem("NYT_Games") : null;
@@ -198,13 +199,6 @@ export const getLocalGame = (
 
   return (
     existingGames.find((game) => {
-      console.log(
-        getUserDate().startOf("day"),
-        DateTime.fromISO(game.date).startOf("day"),
-        getUserDate()
-          .startOf("day")
-          .equals(DateTime.fromISO(game.date).startOf("day"))
-      );
       return getUserDate()
         .startOf("day")
         .equals(DateTime.fromISO(game.date).startOf("day"));
@@ -213,12 +207,12 @@ export const getLocalGame = (
 };
 
 export const saveGame = (
-  gameId: GameTypes = "NYT",
+  gameId: GameTypes = GameType.Official,
   rounds: Rounds,
   word: string,
-  outcome: 'W' | 'L'
+  outcome: "W" | "L"
 ) => {
-  if (gameId === "NYT") {
+  if (gameId === GameType.Official) {
     const nytLocal = localStorage.getItem("NYT_Games");
     const existingGames: LocalStorageNYT[] = nytLocal
       ? JSON.parse(nytLocal)
@@ -235,7 +229,7 @@ export const saveGame = (
               date: getUserDate().toFormat("yyyy-LL-dd"),
               gameBoard: rounds,
               word,
-              outcome
+              outcome,
             },
           ],
           (games) => games.word

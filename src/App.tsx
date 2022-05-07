@@ -16,7 +16,7 @@ import {
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
-import { Rounds, WordBoxValues } from "./@types";
+import { GameType, Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import useChallenge from "./hooks/useChallenge";
 import useUrlHelper from "./hooks/useUrlHelper";
@@ -230,7 +230,10 @@ export default function App({
     setRoundsData(initStatus);
     newWordleWord();
 
-    if ((!getLocalGame("NYT") && gameId === "Random") || gameId === "NYT") {
+    if (
+      (!getLocalGame(GameType.Official) && gameId === "Random") ||
+      gameId === "NYT"
+    ) {
       navigate(homeUrl, { replace: true });
     }
   };

@@ -1,4 +1,4 @@
-import { GameTypes } from "../../@types";
+import { GameType, GameTypes } from "../../@types";
 import useUrlHelper from "../../hooks/useUrlHelper";
 import { black } from "../../util/getColor";
 import Button from "../Button/Button";
@@ -16,8 +16,8 @@ function GameSelectionModalContent({
       <div>
         <Button
           onClick={() => {
-            onGameSelection("NYT");
-            changeGameType("NYT");
+            onGameSelection(GameType.Official);
+            changeGameType(GameType.Official);
           }}
           backgroundColor={black}
           condensed
@@ -28,8 +28,8 @@ function GameSelectionModalContent({
         </Button>
         <Button
           onClick={() => {
-            onGameSelection("Random");
-            changeGameType("Random");
+            onGameSelection(GameType.Random);
+            changeGameType(GameType.Random);
           }}
           backgroundColor={black}
           condensed
