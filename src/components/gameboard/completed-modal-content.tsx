@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import { useNavigate } from "react-router";
 import { Rounds } from "../../@types";
-import { homeUrl } from "../../util/game";
 import { black, green } from "../../util/getColor";
 import Button from "../Button/Button";
 import Divider from "../Divider/Divider";
@@ -33,7 +31,6 @@ function CompletedModalContent({
 }) {
   const [isChallengeLinkCopied, setChallengeLinkCopied] = useState(false);
   const [isEmojiCopied, setEmojiCopied] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (isChallengeLinkCopied) {
@@ -120,7 +117,6 @@ function CompletedModalContent({
           backgroundColor={black}
           onClick={() => {
             onStartOver?.();
-            navigate(homeUrl, { replace: true });
           }}
           condensed
         >

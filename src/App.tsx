@@ -9,17 +9,20 @@ import {
   deleteLetters,
   getBoxPriorityPosition,
   getItemStatus,
+  getLocalGame,
+  homeUrl,
   initStatus,
+  saveGame,
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
-import { GameTypes, Rounds, WordBoxValues } from "./@types";
+import { Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import useChallenge from "./hooks/useChallenge";
+import useUrlHelper from "./hooks/useUrlHelper";
 
 import "./styles.css";
-import { useParams } from "react-router";
-import useUrlHelper from "./hooks/useUrlHelper";
+import { useNavigate } from "react-router";
 
 export default function App({
   challengerData,
@@ -43,12 +46,10 @@ export default function App({
   const [title, setTitle] = useState("A Wordle Challenge Game!");
   const { generateChallengeLink } = useChallenge();
   const { getGameType } = useUrlHelper();
+  const navigate = useNavigate();
 
-  const params = useParams();
-  console.log("params", params);
   const gameId = getGameType();
-
-  console.log("gameId In app", gameId);
+  const localGame = gameId === "NYT" ? getLocalGame(gameId) : null;
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   const currentWord = buildWord(roundsData[currentRound]);
@@ -208,7 +209,19 @@ export default function App({
     return () => {
       document.removeEventListener("keydown", handleLetter);
     };
-  }, [currentRound, isGameLost, isGameLost, word]);
+  }, [currentRound, isGameLost, isGameWon, word]);
+
+  useEffect(() => {
+    if (isGameWon) {
+      saveGame(gameId, roundsData, word, "W");
+    }
+  }, [isGameWon]);
+
+  useEffect(() => {
+    if (isGameLost) {
+      saveGame(gameId, roundsData, word, "L");
+    }
+  }, [isGameLost]);
 
   const handleStartOver = () => {
     setGameWon(false);
@@ -216,6 +229,10 @@ export default function App({
     setCurrentRound(0);
     setRoundsData(initStatus);
     newWordleWord();
+
+    if ((!getLocalGame("NYT") && gameId === "Random") || gameId === "NYT") {
+      navigate(homeUrl, { replace: true });
+    }
   };
 
   return (
@@ -226,13 +243,13 @@ export default function App({
       </Helmet>
       <div style={{ marginBottom: 6 }}>
         <GameBoard
-          roundsData={roundsData}
+          roundsData={localGame?.gameBoard || roundsData}
           isFirstTime={isFirstTime}
           priorityBoxIndex={priorityBoxIndex}
           activeRound={currentRound}
           challengerData={challengerData}
-          isGameWon={isGameWon}
-          isGameLost={isGameLost}
+          isGameWon={localGame?.outcome === "W" || isGameWon}
+          isGameLost={localGame?.outcome === "L" || isGameLost}
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
           challengeLink={generateChallengeLink(roundsData, word)}

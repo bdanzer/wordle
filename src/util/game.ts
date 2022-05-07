@@ -1,10 +1,17 @@
 import { WritableDraft } from "immer/dist/internal";
-import { flattenDeep } from "lodash";
-import { GuessPattern, Rounds, statuses } from "../@types";
+import { flattenDeep, uniqBy } from "lodash";
+import {
+  GameTypes,
+  GuessPattern,
+  LocalStorageNYT,
+  Rounds,
+  statuses,
+} from "../@types";
 import wordleList from "../wordleList.json";
 import { DateTime } from "luxon";
+import { nanoid } from "nanoid";
 
-export const buildWord = (row: GuessPattern[]) =>
+export const buildWord = (row: GuessPattern[]): string =>
   row.reduce((prevValue, currentValue) => prevValue + currentValue.letter, "");
 
 export const findWordIndex = (word: string): number => wordleList.indexOf(word);
@@ -168,13 +175,72 @@ export const getBoxPriorityPosition = (lettersRow: GuessPattern[]) => {
   return -1;
 };
 
-export const getNewYorkTimesWord = () => {
+export const getUserDate = () => {
+  return DateTime.now();
+};
+
+export const getOfficialWord = () => {
   const start = DateTime.fromISO("2021-06-19");
   const diffInDays = Math.floor(
-    Math.abs(start.diff(DateTime.now(), "days").days)
+    Math.abs(start.diff(getUserDate(), "days").days)
   );
-  // diffInDays.toObject(); //=> { months: 1 }
+  return wordleList[diffInDays];
+};
 
-  console.log("diffInDays", diffInDays);
-  return wordleList[diffInDays]
+export const getLocalGame = (
+  gameType: GameTypes = "NYT"
+): LocalStorageNYT | null => {
+  const nytLocal =
+    gameType === "NYT" ? localStorage.getItem("NYT_Games") : null;
+  const existingGames: LocalStorageNYT[] = nytLocal ? JSON.parse(nytLocal) : [];
+
+  console.log("existing", existingGames);
+
+  return (
+    existingGames.find((game) => {
+      console.log(
+        getUserDate().startOf("day"),
+        DateTime.fromISO(game.date).startOf("day"),
+        getUserDate()
+          .startOf("day")
+          .equals(DateTime.fromISO(game.date).startOf("day"))
+      );
+      return getUserDate()
+        .startOf("day")
+        .equals(DateTime.fromISO(game.date).startOf("day"));
+    }) || null
+  );
+};
+
+export const saveGame = (
+  gameId: GameTypes = "NYT",
+  rounds: Rounds,
+  word: string,
+  outcome: 'W' | 'L'
+) => {
+  if (gameId === "NYT") {
+    const nytLocal = localStorage.getItem("NYT_Games");
+    const existingGames: LocalStorageNYT[] = nytLocal
+      ? JSON.parse(nytLocal)
+      : [];
+
+    localStorage.setItem(
+      "NYT_Games",
+      JSON.stringify(
+        uniqBy(
+          [
+            ...existingGames,
+            {
+              id: nanoid(),
+              date: getUserDate().toFormat("yyyy-LL-dd"),
+              gameBoard: rounds,
+              word,
+              outcome
+            },
+          ],
+          (games) => games.word
+        )
+      )
+    );
+  }
 };

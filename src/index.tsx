@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as ReactDOMClient from "react-dom/client";
 import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 import { useParams } from "react-router";
@@ -8,7 +8,7 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
 import App from "./App";
-import { getNewYorkTimesWord, getRandomWord, homeUrl } from "./util/game";
+import { getOfficialWord, getRandomWord } from "./util/game";
 import { urlPath } from "./util/routing";
 
 const rootElement = document.getElementById("root") as HTMLElement;
@@ -36,8 +36,7 @@ function Router() {
     : null;
 
   const randomWordleWord = getRandomWord(null, wordIndex);
-  const officialWord = getNewYorkTimesWord();
-  console.log("newYorkTimesWord", officialWord);
+  const officialWord = getOfficialWord();
 
   const [randomWord, setRandomWordleWord] = useState(randomWordleWord);
 
@@ -45,18 +44,12 @@ function Router() {
     setRandomWordleWord(getRandomWord(null, wordIndex));
   };
 
-  useEffect(() => {
-    // if (isFirstTime) {
-    //   localStorage.setItem("hasPlayed", "true");
-    // }
-  }, []);
-
   return useRoutes([
     {
       path: urlPath(),
       element: <Wrapper />,
       children: [
-        { element: <Navigate to="/home" replace /> },
+        // { element: <Navigate to="/home" replace /> },
         {
           path: urlPath(),
           element: (

@@ -3,7 +3,6 @@ import WordleBox from "../wordle-box/wordle-box";
 import { ReactNode, useEffect, useState } from "react";
 import { black } from "../../util/getColor";
 import CompletedModalContent from "./completed-modal-content";
-import Button from "../Button/Button";
 import FirstTimeModalContent from "./first-time-modal-content";
 import GameSelectionModalContent from "./game-selection-modal-content";
 

@@ -18,3 +18,11 @@ export interface WordBoxValues {
 }
 
 export type GameTypes = "NYT" | "Random";
+
+export interface LocalStorageNYT {
+  id: string;
+  date: string;
+  gameBoard: Rounds;
+  word: string;
+  outcome: 'W' | 'L'
+}

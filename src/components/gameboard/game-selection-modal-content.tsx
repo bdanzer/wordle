@@ -1,8 +1,6 @@
-import { useNavigate } from "react-router";
 import { GameTypes } from "../../@types";
 import useUrlHelper from "../../hooks/useUrlHelper";
 import { black } from "../../util/getColor";
-import { urlPath } from "../../util/routing";
 import Button from "../Button/Button";
 
 function GameSelectionModalContent({
