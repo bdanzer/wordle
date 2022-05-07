@@ -19,6 +19,7 @@ import useChallenge from "./hooks/useChallenge";
 
 import "./styles.css";
 import { useParams } from "react-router";
+import useUrlHelper from "./hooks/useUrlHelper";
 
 export default function App({
   challengerData,
@@ -41,10 +42,11 @@ export default function App({
   const [isGameLost, setGameLost] = useState(false);
   const [title, setTitle] = useState("A Wordle Challenge Game!");
   const { generateChallengeLink } = useChallenge();
+  const { getGameType } = useUrlHelper();
 
   const params = useParams();
   console.log("params", params);
-  const gameId = params.gameId as GameTypes | undefined;
+  const gameId = getGameType();
 
   console.log("gameId In app", gameId);
 

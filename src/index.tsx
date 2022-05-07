@@ -70,19 +70,6 @@ function Router() {
             />
           ),
         },
-        {
-          path: urlPath(":gameId"),
-          element: (
-            <App
-              challengerData={challengerGameData}
-              wordIndex={wordIndex}
-              wordleWord={officialWord}
-              randomWord={randomWord}
-              newWordleWord={newWordleWord}
-              isFirstTime={isFirstTime}
-            />
-          ),
-        },
       ],
     },
     {

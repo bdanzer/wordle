@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { GameTypes } from "../../@types";
+import useUrlHelper from "../../hooks/useUrlHelper";
 import { black } from "../../util/getColor";
 import { urlPath } from "../../util/routing";
 import Button from "../Button/Button";
@@ -9,7 +10,7 @@ function GameSelectionModalContent({
 }: {
   onGameSelection: (gameType: GameTypes) => void;
 }) {
-  const navigate = useNavigate();
+  const { changeGameType } = useUrlHelper();
 
   return (
     <div>
@@ -18,7 +19,7 @@ function GameSelectionModalContent({
         <Button
           onClick={() => {
             onGameSelection("NYT");
-            navigate(urlPath("NYT"));
+            changeGameType("NYT");
           }}
           backgroundColor={black}
           condensed
@@ -30,7 +31,7 @@ function GameSelectionModalContent({
         <Button
           onClick={() => {
             onGameSelection("Random");
-            navigate(urlPath("Random"));
+            changeGameType("Random");
           }}
           backgroundColor={black}
           condensed
