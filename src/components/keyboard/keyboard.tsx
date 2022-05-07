@@ -82,7 +82,7 @@ function Keyboard({
   notAWord: boolean;
   wordComplete: boolean;
 }) {
-  const getNewColor = (letter: string) => {
+  const getLetterColor = (letter: string) => {
     let color: statuses = "pending";
     if (greenLetters.includes(letter)) {
       color = "green";
@@ -126,7 +126,7 @@ function Keyboard({
                   key={letter}
                   letter={letter}
                   onLetterSelection={onLetterSelection}
-                  backgroundColor={getNewColor(letter)}
+                  backgroundColor={getLetterColor(letter)}
                 />
               )
             )}
