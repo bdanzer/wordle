@@ -1,4 +1,11 @@
-export type statuses = "green" | "yellow" | "none" | "pending" | "wrong" | "selected" | "locked";
+export type statuses =
+  | "green"
+  | "yellow"
+  | "none"
+  | "pending"
+  | "wrong"
+  | "selected"
+  | "locked";
 export interface GuessPattern {
   status: statuses;
   letter: string;
@@ -9,3 +16,5 @@ export interface WordBoxValues {
   roundRowIndex: number;
   wordBoxIndex: number;
 }
+
+export type GameTypes = "NYT" | "Random";

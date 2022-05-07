@@ -13,23 +13,26 @@ import {
 } from "./util/game";
 import { emojiCreation } from "./util/emojiCreator";
 import Keyboard from "./components/keyboard/keyboard";
-import { Rounds, WordBoxValues } from "./@types";
+import { GameTypes, Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import useChallenge from "./hooks/useChallenge";
 
 import "./styles.css";
+import { useParams } from "react-router";
 
 export default function App({
   challengerData,
   wordleWord,
   newWordleWord,
   isFirstTime,
+  randomWord,
 }: {
   challengerData: Rounds | null;
   wordIndex: number | null;
   wordleWord: string;
   newWordleWord: () => void;
   isFirstTime: boolean;
+  randomWord: string;
 }) {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
   const [currentRound, setCurrentRound] = useState(0);
@@ -39,11 +42,18 @@ export default function App({
   const [title, setTitle] = useState("A Wordle Challenge Game!");
   const { generateChallengeLink } = useChallenge();
 
+  const params = useParams();
+  console.log("params", params);
+  const gameId = params.gameId as GameTypes | undefined;
+
+  console.log("gameId In app", gameId);
+
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   const currentWord = buildWord(roundsData[currentRound]);
+  const word = gameId === "NYT" ? wordleWord : randomWord;
 
   console.log("Current Round", currentRound);
-  console.log("Wordle Word", wordleWord);
+  console.log("Wordle Word", word);
   console.log("Rounds Data", roundsData);
   console.log("Challenger Data", challengerData);
 
@@ -67,7 +77,7 @@ export default function App({
 
   const handleChallenge = () => {
     const stringifiedRoundsData = JSON.stringify(roundsData);
-    const link = generateChallengeLink(roundsData, wordleWord);
+    const link = generateChallengeLink(roundsData, word);
   };
 
   const handleWordBoxSelected = (wordBoxValues: WordBoxValues) => {
@@ -116,14 +126,14 @@ export default function App({
           if (guessedWord.length !== 5 || !wordleList.includes(guessedWord))
             return;
 
-          const isWin = guessedWord === wordleWord;
+          const isWin = guessedWord === word;
           const nextRoundLetters =
             currentRound + 1 > 5 || isWin ? null : draftState[currentRound + 1];
 
           //Add statuses to words
           currentRoundItems.forEach((letterData, i) => {
             const isLetterLocked = letterData.status === "locked";
-            const status = getItemStatus(wordleWord, guessedWord, i);
+            const status = getItemStatus(word, guessedWord, i);
 
             letterData.status = status;
 
@@ -196,7 +206,7 @@ export default function App({
     return () => {
       document.removeEventListener("keydown", handleLetter);
     };
-  }, [currentRound, isGameLost, isGameLost, wordleWord]);
+  }, [currentRound, isGameLost, isGameLost, word]);
 
   const handleStartOver = () => {
     setGameWon(false);
@@ -223,8 +233,9 @@ export default function App({
           isGameLost={isGameLost}
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
-          challengeLink={generateChallengeLink(roundsData, wordleWord)}
-          wordleWord={wordleWord}
+          challengeLink={generateChallengeLink(roundsData, word)}
+          wordleWord={word}
+          gameType={gameId}
           emojis={emojis}
           onWordBoxSelected={handleWordBoxSelected}
         />

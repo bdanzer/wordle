@@ -2,26 +2,7 @@ import { WritableDraft } from "immer/dist/internal";
 import { flattenDeep } from "lodash";
 import { GuessPattern, Rounds, statuses } from "../@types";
 import wordleList from "../wordleList.json";
-
-// const check = (
-//   currentRoundItems: WritableDraft<GuessPattern>[],
-//   wordleWord
-// ) => {
-//   return currentRoundItems.forEach((item, i) => {
-//     console.log(wordleWord[i], e.key);
-//     const indexOfLetter = randomWordleWord.indexOf(item.letter);
-
-//     if (wordleWord[i] === currentRoundItems[i].letter) {
-//       console.log("got it right", item.letter);
-//       winChecker++;
-//       item.status = "green";
-//     } else if (indexOfLetter !== -1) {
-//       item.status = "yellow";
-//     } else {
-//       item.status = "wrong";
-//     }
-//   });
-// };
+import { DateTime } from "luxon";
 
 export const buildWord = (row: GuessPattern[]) =>
   row.reduce((prevValue, currentValue) => prevValue + currentValue.letter, "");
@@ -151,7 +132,10 @@ export function deleteLetters(
     for (let i = currentRoundItems.length - 1; i >= 0; i--) {
       if (currentRoundItems[i].status === status) {
         // TODO: Need to rework to pull from priority position function for a centralized spot
-        currentRoundItems[i].status = status ==='selected' && currentRoundItems[i].letter ? 'selected' : "none";
+        currentRoundItems[i].status =
+          status === "selected" && currentRoundItems[i].letter
+            ? "selected"
+            : "none";
         currentRoundItems[i].letter = "";
         deletedSelected = true;
         return true;
@@ -182,4 +166,15 @@ export const getBoxPriorityPosition = (lettersRow: GuessPattern[]) => {
   if (noneLetter !== -1 && word.length !== 5) return noneLetter;
 
   return -1;
+};
+
+export const getNewYorkTimesWord = () => {
+  const start = DateTime.fromISO("2021-06-19");
+  const diffInDays = Math.floor(
+    Math.abs(start.diff(DateTime.now(), "days").days)
+  );
+  // diffInDays.toObject(); //=> { months: 1 }
+
+  console.log("diffInDays", diffInDays);
+  return wordleList[diffInDays]
 };

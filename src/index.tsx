@@ -8,7 +8,8 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
 import App from "./App";
-import { getRandomWord, homeUrl } from "./util/game";
+import { getNewYorkTimesWord, getRandomWord, homeUrl } from "./util/game";
+import { urlPath } from "./util/routing";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOMClient.createRoot(rootElement);
@@ -24,6 +25,7 @@ function Router() {
   const isFirstTime = !localStorage.getItem("hasPlayed");
 
   const searchParams = new URLSearchParams(location.search);
+  console.log("params", params);
 
   const challengerStringData = searchParams.get("challengerGameData");
   const challengerGameData = challengerStringData
@@ -34,8 +36,10 @@ function Router() {
     : null;
 
   const randomWordleWord = getRandomWord(null, wordIndex);
+  const officialWord = getNewYorkTimesWord();
+  console.log("newYorkTimesWord", officialWord);
 
-  const [wordleWord, setRandomWordleWord] = useState(randomWordleWord);
+  const [randomWord, setRandomWordleWord] = useState(randomWordleWord);
 
   const newWordleWord = (wordIndex?: null | number) => {
     setRandomWordleWord(getRandomWord(null, wordIndex));
@@ -49,17 +53,31 @@ function Router() {
 
   return useRoutes([
     {
-      path: homeUrl,
+      path: urlPath(),
       element: <Wrapper />,
       children: [
         { element: <Navigate to="/home" replace /> },
         {
-          path: homeUrl,
+          path: urlPath(),
           element: (
             <App
               challengerData={challengerGameData}
               wordIndex={wordIndex}
-              wordleWord={wordleWord}
+              wordleWord={officialWord}
+              randomWord={randomWord}
+              newWordleWord={newWordleWord}
+              isFirstTime={isFirstTime}
+            />
+          ),
+        },
+        {
+          path: urlPath(":gameId"),
+          element: (
+            <App
+              challengerData={challengerGameData}
+              wordIndex={wordIndex}
+              wordleWord={officialWord}
+              randomWord={randomWord}
               newWordleWord={newWordleWord}
               isFirstTime={isFirstTime}
             />
