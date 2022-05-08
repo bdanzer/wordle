@@ -1,7 +1,6 @@
-import { useLocation, useParams } from "react-router";
 import { findWordIndex, homeUrl } from "../util/game";
 import qs from "query-string";
-import { Rounds } from "../@types";
+import { GameType, Rounds } from "../@types";
 import useUrlHelper from "./useUrlHelper";
 
 function useChallenge() {
@@ -11,9 +10,13 @@ function useChallenge() {
       const wordIndex = findWordIndex(randomWord);
       const challengerGameData = JSON.stringify(roundsData);
       const stringUrl = qs.stringify({ wordIndex, challengerGameData });
-      return `${
-        document.location.origin
-      }${homeUrl}?${stringUrl}&gameType=${getGameType()}`;
+      const gameType = getGameType();
+      const preText = `${
+        gameType === GameType.Official
+          ? "Offical Word Challenge \n"
+          : "Random Word Challenge \n"
+      }`;
+      return `${preText}${document.location.origin}${homeUrl}?${stringUrl}&gameType=${gameType}`;
     },
   };
 }
