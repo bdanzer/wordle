@@ -13,8 +13,8 @@ function useChallenge() {
       const gameType = getGameType();
       const preText = `${
         gameType === GameType.Official
-          ? "Offical Word Challenge \n"
-          : "Random Word Challenge \n"
+          ? `Offical Word Challenge - Word ${wordIndex} \n\n`
+          : `Random Word Challenge - Word ${wordIndex} \n\n`
       }`;
       return `${preText}${document.location.origin}${homeUrl}?${stringUrl}&gameType=${gameType}`;
     },

@@ -1,9 +1,10 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter, MemoryRouter } from "react-router-dom";
-import { Rounds } from "./@types";
+import { GameType, Outcome, Rounds } from "./@types";
 import App from "./App";
-import { getOfficialWord, getRandomWord } from "./util/game";
+import { getOfficialWord, getRandomWord, saveGame } from "./util/game";
+import { roundsData } from "./__mocks__/roundsData";
 
 describe("test", () => {
   test("Test NYT Word", async () => {
@@ -195,6 +196,7 @@ describe("test", () => {
   });
 
   test("Test NYT Challenge", async () => {
+    saveGame(GameType.Official, roundsData, "midst", Outcome.W);
     const searchParams = new URLSearchParams(
       '?challengerGameData=%5B%5B%7B"status"%3A"wrong"%2C"letter"%3A"b"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"l"%7D%5D%2C%5B%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"e"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"a"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"n"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"k"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"t"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"h"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"u"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"green"%2C"letter"%3A"m"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"s"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"t"%7D%5D%2C%5B%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%5D%5D&wordIndex=322&gameType=NYT'
     );
