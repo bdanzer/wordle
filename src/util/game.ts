@@ -213,29 +213,26 @@ export const saveGame = (
   word: string,
   outcome: Outcome
 ) => {
-  if (gameId === GameType.Official) {
-    const nytLocal = localStorage.getItem("NYT_Games");
-    const existingGames: LocalStorageNYT[] = nytLocal
-      ? JSON.parse(nytLocal)
-      : [];
+  const itemKey = gameId === GameType.Official ? "NYT_Games" : "Random_Games";
+  const nytLocal = localStorage.getItem(itemKey);
+  const existingGames: LocalStorageNYT[] = nytLocal ? JSON.parse(nytLocal) : [];
 
-    localStorage.setItem(
-      "NYT_Games",
-      JSON.stringify(
-        uniqBy(
-          [
-            ...existingGames,
-            {
-              id: nanoid(),
-              date: getUserDate().toFormat("yyyy-LL-dd"),
-              gameBoard: rounds,
-              word,
-              outcome,
-            },
-          ],
-          (games) => games.word
-        )
+  localStorage.setItem(
+    itemKey,
+    JSON.stringify(
+      uniqBy(
+        [
+          ...existingGames,
+          {
+            id: nanoid(),
+            date: getUserDate().toFormat("yyyy-LL-dd"),
+            gameBoard: rounds,
+            word,
+            outcome,
+          },
+        ],
+        (games) => games.word
       )
-    );
-  }
+    )
+  );
 };

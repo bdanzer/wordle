@@ -55,10 +55,18 @@ export default function App({
   const currentWord = buildWord(roundsData[currentRound]);
   const word = gameId === "NYT" ? wordleWord : randomWord;
 
+  const gameWon =
+    (gameId === GameType.Official && localGame?.outcome === Outcome.W) ||
+    isGameWon;
+  const gameLost =
+    (gameId === GameType.Official && localGame?.outcome === Outcome.L) ||
+    isGameLost;
+
   console.log("Current Round", currentRound);
   console.log("Wordle Word", word);
   console.log("Rounds Data", roundsData);
   console.log("Challenger Data", challengerData);
+  console.log("Local Game", localGame);
 
   const priorityBoxIndex = getBoxPriorityPosition(roundsData[currentRound]);
 
@@ -251,8 +259,8 @@ export default function App({
           priorityBoxIndex={priorityBoxIndex}
           activeRound={currentRound}
           challengerData={challengerData}
-          isGameWon={localGame?.outcome === Outcome.W || isGameWon}
-          isGameLost={localGame?.outcome === Outcome.L || isGameLost}
+          isGameWon={gameWon}
+          isGameLost={gameLost}
           onChallenge={handleChallenge}
           onStartOver={handleStartOver}
           challengeLink={generateChallengeLink(roundsData, word)}
