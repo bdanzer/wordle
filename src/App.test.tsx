@@ -1,6 +1,6 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import { Rounds } from "./@types";
 import App from "./App";
 import { getOfficialWord, getRandomWord } from "./util/game";
@@ -176,6 +176,7 @@ describe("test", () => {
     );
 
     //need to test the localstorage save
+    expect(screenItem.getByText("Start New Game"));
     await user.click(screenItem.getByText("Start New Game"));
     // const playOfficialWordButton = screenItem.getByText("Play Official Word");
     // expect(playOfficialWordButton);
@@ -185,7 +186,7 @@ describe("test", () => {
 
     console.log("test random wordle word", randomWordleWord);
     await waitFor(() => screenItem.getByTestId(`gameboard-0-0`));
-    // expect(screenItem.getByTestId("Random").textContent).toBe("Random");
+    expect(screenItem.getByTestId("Random").textContent).toBe("Random");
     expect(screenItem.getByTestId(randomWordleWord));
     await user.keyboard(randomWordleWord);
     expect(screenItem.getByTestId(`gameboard-0-0`).textContent).toBe(
@@ -279,7 +280,7 @@ describe("test", () => {
       randomWordleWord[4]
     );
 
-    console.log("screen debug", screenItem.debug(screenItem.container));
+    screenItem.debug(screenItem.container);
 
     await user.click(screenItem.getByText("Start New Game"));
     const playOfficialWordButton = screenItem.getByText("Play Official Word");
