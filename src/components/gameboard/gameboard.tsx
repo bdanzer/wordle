@@ -9,6 +9,7 @@ import GameSelectionModalContent from "./game-selection-modal-content";
 function MiniModal({ children }: { children: ReactNode }) {
   return (
     <div
+      data-testid="mini-modal"
       style={{
         background: "white",
         position: "absolute",
@@ -148,6 +149,9 @@ function GameBoard({
         <div key={roundRowIndex} style={{ display: "flex" }}>
           {row.map((letterData, letterPosition) => (
             <WordleBox
+              testId={`${challengerData && miniBoard ? "challenger-" : ""}${
+                miniBoard ? "miniboard-" : ""
+              }gameboard-${roundRowIndex}-${letterPosition}`}
               key={letterPosition}
               onSelect={() => {
                 if (activeRound === roundRowIndex) {

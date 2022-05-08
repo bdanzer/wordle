@@ -54,7 +54,8 @@ export default function App({
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   const currentWord = buildWord(roundsData[currentRound]);
-  const word = gameId === GameType.Official ? wordleWord : randomWord;
+  const word =
+    gameId === GameType.Official && !challengerData ? wordleWord : randomWord;
 
   const gameWon =
     (gameId === GameType.Official &&
@@ -252,7 +253,10 @@ export default function App({
   };
 
   return (
-    <div className="App">
+    <div className="App" data-testid={word}>
+      <div style={{ visibility: "hidden" }} data-testid={gameId}>
+        {gameId}
+      </div>
       <Helmet>
         <title>{title}</title>
         <meta name="description" content="Send Wordle Challenges" />

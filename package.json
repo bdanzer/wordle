@@ -6,6 +6,7 @@
   "main": "src/index.tsx",
   "homepage": "https://bdanzer.github.io/wordle",
   "dependencies": {
+    "@testing-library/user-event": "^14.1.1",
     "@types/lodash": "4.14.182",
     "@types/react-router": "5.1.18",
     "@types/react-router-dom": "5.3.3",
@@ -36,6 +37,8 @@
     "workbox-streams": "^5.1.4"
   },
   "devDependencies": {
+    "@testing-library/react": "^13.2.0",
+    "@types/jest": "^27.5.0",
     "@types/luxon": "^2.3.2",
     "@types/react": "17.0.20",
     "@types/react-copy-to-clipboard": "^5.0.2",

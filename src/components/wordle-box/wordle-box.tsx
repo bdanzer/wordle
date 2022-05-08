@@ -13,6 +13,7 @@ function WordleBox({
   margin,
   hasPriority,
   inline,
+  testId,
 }: {
   letter: string;
   status: statuses;
@@ -25,9 +26,12 @@ function WordleBox({
   margin?: number;
   hasPriority?: boolean;
   inline?: boolean;
+  testId?: string;
 }) {
   return (
     <div
+      data-testid={testId}
+      id="wordle-box"
       style={{
         borderRadius: miniBoard ? 4 : 6,
         height: miniBoard ? 30 : width || 69,

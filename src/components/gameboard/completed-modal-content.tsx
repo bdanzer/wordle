@@ -100,7 +100,11 @@ function CompletedModalContent({
               >
                 Their Board
               </span>
-              <GameBoard roundsData={challengerData} miniBoard />
+              <GameBoard
+                roundsData={challengerData}
+                miniBoard
+                challengerData={challengerData}
+              />
             </div>
           </div>
         </div>
