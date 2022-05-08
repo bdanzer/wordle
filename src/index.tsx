@@ -36,7 +36,7 @@ function Router() {
     : null;
 
   const randomWordleWord = getRandomWord(null, wordIndex);
-  const officialWord = getOfficialWord();
+  const officialWord = getOfficialWord(wordIndex);
 
   const [randomWord, setRandomWordleWord] = useState(randomWordleWord);
 

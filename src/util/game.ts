@@ -1,5 +1,5 @@
 import { WritableDraft } from "immer/dist/internal";
-import { flattenDeep, uniqBy } from "lodash";
+import { flattenDeep, reverse, uniqBy } from "lodash";
 import {
   GameType,
   GameTypes,
@@ -181,22 +181,20 @@ export const getUserDate = () => {
   return DateTime.now();
 };
 
-export const getOfficialWord = () => {
+export const getOfficialWord = (wordIndex: number | null) => {
   const start = DateTime.fromISO("2021-06-19");
   const diffInDays = Math.floor(
     Math.abs(start.diff(getUserDate(), "days").days)
   );
-  return wordleList[diffInDays];
+  return wordleList[wordIndex || diffInDays];
 };
 
 export const getLocalGame = (
   gameType: GameTypes = GameType.Official
 ): LocalStorageNYT | null => {
   const nytLocal =
-    gameType === "NYT" ? localStorage.getItem("NYT_Games") : null;
+    gameType === GameType.Official ? localStorage.getItem("NYT_Games") : null;
   const existingGames: LocalStorageNYT[] = nytLocal ? JSON.parse(nytLocal) : [];
-
-  console.log("existing", existingGames);
 
   return (
     existingGames.find((game) => {
@@ -205,6 +203,20 @@ export const getLocalGame = (
         .equals(DateTime.fromISO(game.date).startOf("day"));
     }) || null
   );
+};
+
+export const getLocalGamesByType = (gameType?: GameTypes) => {
+  if (!gameType) return []
+
+  const localGames =
+    gameType === GameType.Official
+      ? localStorage.getItem("NYT_Games")
+      : localStorage.getItem("Random_Games");
+  const existingGames: LocalStorageNYT[] = localGames
+    ? JSON.parse(localGames)
+    : [];
+
+  return reverse(existingGames);
 };
 
 export const saveGame = (

@@ -23,6 +23,7 @@ import useUrlHelper from "./hooks/useUrlHelper";
 
 import "./styles.css";
 import { useNavigate } from "react-router";
+import MatchHistory from "./components/match-history/match-history";
 
 export default function App({
   challengerData,
@@ -49,17 +50,21 @@ export default function App({
   const navigate = useNavigate();
 
   const gameId = getGameType();
-  const localGame = gameId === "NYT" ? getLocalGame(gameId) : null;
+  const localGame = gameId === GameType.Official ? getLocalGame(gameId) : null;
 
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   const currentWord = buildWord(roundsData[currentRound]);
-  const word = gameId === "NYT" ? wordleWord : randomWord;
+  const word = gameId === GameType.Official ? wordleWord : randomWord;
 
   const gameWon =
-    (gameId === GameType.Official && localGame?.outcome === Outcome.W) ||
+    (gameId === GameType.Official &&
+      localGame?.outcome === Outcome.W &&
+      !challengerData) ||
     isGameWon;
   const gameLost =
-    (gameId === GameType.Official && localGame?.outcome === Outcome.L) ||
+    (gameId === GameType.Official &&
+      localGame?.outcome === Outcome.L &&
+      !challengerData) ||
     isGameLost;
 
   console.log("Current Round", currentRound);
@@ -254,7 +259,7 @@ export default function App({
       </Helmet>
       <div style={{ marginBottom: 6 }}>
         <GameBoard
-          roundsData={localGame?.gameBoard || roundsData}
+          roundsData={(!challengerData && localGame?.gameBoard) || roundsData}
           isFirstTime={isFirstTime}
           priorityBoxIndex={priorityBoxIndex}
           activeRound={currentRound}
@@ -278,6 +283,7 @@ export default function App({
         notAWord={isNotAWord}
         wordComplete={currentWord.length === 5}
       />
+      {/* <MatchHistory gameType={gameId} /> */}
     </div>
   );
 }
