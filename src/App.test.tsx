@@ -1,4 +1,10 @@
-import { render, fireEvent, waitFor, screen } from "@testing-library/react";
+import {
+  render,
+  fireEvent,
+  waitFor,
+  screen,
+  act,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import { GameType, Outcome, Rounds } from "./@types";
@@ -7,6 +13,8 @@ import { getOfficialWord, getRandomWord, saveGame } from "./util/game";
 import { roundsData } from "./__mocks__/roundsData";
 
 describe("test", () => {
+  beforeEach(() => localStorage.clear());
+
   test("Test NYT Word", async () => {
     const searchParams = new URLSearchParams(location.search);
 
@@ -179,9 +187,9 @@ describe("test", () => {
     //need to test the localstorage save
     expect(screenItem.getByText("Start New Game"));
     await user.click(screenItem.getByText("Start New Game"));
-    // const playOfficialWordButton = screenItem.getByText("Play Official Word");
-    // expect(playOfficialWordButton);
-    // await user.click(playOfficialWordButton);
+    const playRandomWordButton = screenItem.getByText("Play Random Words");
+    expect(playRandomWordButton);
+    await user.click(playRandomWordButton);
     // expect(screenItem.getByText("You Completed the game"));
     // expect(screenItem.getByText(randomWordleWord));
 
