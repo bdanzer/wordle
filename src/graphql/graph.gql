@@ -1,0 +1,21 @@
+query GetUser {
+  getUser {
+    id
+    firstName
+    lastName
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+mutation GoogleSignIn($googleToken: String!) {
+  googleSignIn(googleToken: $googleToken) {
+    id
+    firstName
+    email
+    lastName
+    createdAt
+    updatedAt
+  }
+}

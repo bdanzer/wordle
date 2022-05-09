@@ -7,10 +7,28 @@ import { Rounds } from "./@types";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import reportWebVitals from "./reportWebVitals";
 
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  HttpLink,
+} from "@apollo/client";
+
+const link = new HttpLink({
+  uri: process.env.REACT_APP_GRAPH_QL_URI,
+  credentials: "include",
+});
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+});
+
 import App from "./App";
 import { getOfficialWord, getRandomWord } from "./util/game";
 import { urlPath } from "./util/routing";
 import { useOneTap } from "./hooks/useOneTap";
+import { useGoogleSignInMutation } from "./generated/graphql";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOMClient.createRoot(rootElement);
@@ -44,6 +62,8 @@ function Router() {
   const newWordleWord = (wordIndex?: null | number) => {
     setRandomWordleWord(getRandomWord(null, wordIndex));
   };
+
+  const [googleLogin, { loading }] = useGoogleSignInMutation();
 
   const checkedForUser = true;
   const userData = false;
@@ -98,9 +118,11 @@ function Router() {
 }
 
 root.render(
-  <BrowserRouter>
-    <Router />
-  </BrowserRouter>
+  <ApolloProvider client={client}>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
+  </ApolloProvider>
 );
 
 // If you want your app to work offline and load faster, you can change
