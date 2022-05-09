@@ -24,6 +24,7 @@ import useUrlHelper from "./hooks/useUrlHelper";
 import "./styles.css";
 import { useNavigate } from "react-router";
 import MatchHistory from "./components/match-history/match-history";
+import { useLocation } from "react-router";
 
 export default function App({
   challengerData,
@@ -48,6 +49,7 @@ export default function App({
   const { generateChallengeLink } = useChallenge();
   const { getGameType } = useUrlHelper();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const gameId = getGameType();
   const localGame = gameId === GameType.Official ? getLocalGame(gameId) : null;
@@ -73,6 +75,8 @@ export default function App({
   console.log("Rounds Data", roundsData);
   console.log("Challenger Data", challengerData);
   console.log("Local Game", localGame);
+  console.log("Location Search", location.search);
+  console.log("GameId Search", gameId);
 
   const priorityBoxIndex = getBoxPriorityPosition(roundsData[currentRound]);
 
@@ -245,8 +249,8 @@ export default function App({
     newWordleWord();
 
     if (
-      (!getLocalGame(GameType.Official) && gameId === "Random") ||
-      gameId === "NYT"
+      (!getLocalGame(GameType.Official) && gameId === GameType.Random) ||
+      gameId === GameType.Official
     ) {
       navigate(homeUrl, { replace: true });
     }

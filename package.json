@@ -6,10 +6,12 @@
   "main": "src/index.tsx",
   "homepage": "https://bdanzer.github.io/wordle",
   "dependencies": {
+    "@apollo/client": "^3.6.2",
     "@testing-library/user-event": "^14.1.1",
     "@types/lodash": "4.14.182",
     "@types/react-router": "5.1.18",
     "@types/react-router-dom": "5.3.3",
+    "graphql": "^16.4.0",
     "immer": "9.0.12",
     "lodash": "4.17.21",
     "luxon": "^2.3.2",

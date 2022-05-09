@@ -10,6 +10,7 @@ import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import { getOfficialWord, getRandomWord } from "./util/game";
 import { urlPath } from "./util/routing";
+import { useOneTap } from "./hooks/useOneTap";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOMClient.createRoot(rootElement);
@@ -43,6 +44,29 @@ function Router() {
   const newWordleWord = (wordIndex?: null | number) => {
     setRandomWordleWord(getRandomWord(null, wordIndex));
   };
+
+  const checkedForUser = true;
+  const userData = false;
+
+  const oneTap = useOneTap({
+    enableOneTap: checkedForUser && !Boolean(userData),
+    onSuccess: (data) => {
+      console.log("success on oneTap!", data);
+      if (data.credential) {
+        // googleLogin({
+        //   variables: {
+        //     googleToken: data.credential,
+        //   },
+        // });
+      }
+    },
+    onError: (err) => console.log("err", err),
+    googleAccountConfigs: {
+      client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID as string,
+      auto_select: true,
+    },
+    // ref: buttonRef,
+  });
 
   return useRoutes([
     {
