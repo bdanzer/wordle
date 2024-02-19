@@ -14,6 +14,7 @@ function WordleBox({
   hasPriority,
   inline,
   testId,
+  hasChallengerMet = false,
 }: {
   letter: string;
   status: statuses;
@@ -27,6 +28,7 @@ function WordleBox({
   hasPriority?: boolean;
   inline?: boolean;
   testId?: string;
+  hasChallengerMet?: boolean;
 }) {
   return (
     <div
@@ -45,7 +47,7 @@ function WordleBox({
             : status === "pending"
             ? ".5s ease"
             : "2s ease",
-        background: getColor(status),
+        background: hasChallengerMet ? "#707B7C" : getColor(status),
         // border: "2px solid white",
         margin: miniBoard ? 1 : margin || 2,
         color: "white",

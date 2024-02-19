@@ -1,6 +1,8 @@
 import { useLocation } from "react-router";
 import { Rounds } from "../@types";
 
+function getChallengerRoundsCompleted() {}
+
 export function useChallengerData() {
   const location = useLocation();
 
@@ -11,5 +13,15 @@ export function useChallengerData() {
     ? (JSON.parse(challengerStringData) as Rounds)
     : null;
 
-  return { challengerGameData };
+  console.log({ challengerGameData });
+
+  const challengerRowCompletion = challengerGameData?.reduce(
+    (prevNumber, gameDataRow) =>
+      gameDataRow.some((gameData) => gameData.status !== "none")
+        ? 1 + prevNumber
+        : prevNumber,
+    -1
+  );
+
+  return { challengerGameData, challengerRowCompletion };
 }

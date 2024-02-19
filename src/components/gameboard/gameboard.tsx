@@ -5,6 +5,7 @@ import { black } from "../../util/getColor";
 import CompletedModalContent from "./completed-modal-content";
 import FirstTimeModalContent from "./first-time-modal-content";
 import GameSelectionModalContent from "./game-selection-modal-content";
+import { useChallengerData } from "../../hooks/useChallengerData";
 
 function MiniModal({ children }: { children: ReactNode }) {
   return (
@@ -67,6 +68,7 @@ function GameBoard({
       wordBoxIndex,
     });
   };
+  const { challengerRowCompletion } = useChallengerData();
   const windowWidth = window.innerWidth > 375 ? 375 : window.innerWidth;
   const marginToAccount = 5 * 2;
   const boxMargins = 2.5;
@@ -159,6 +161,7 @@ function GameBoard({
                     handleWordBoxSelect(roundRowIndex, letterPosition);
                   }
                 }}
+                hasChallengerMet={challengerRowCompletion === roundRowIndex}
                 hasPriority={
                   roundRowIndex === activeRound &&
                   priorityBoxIndex === letterPosition
