@@ -11,7 +11,7 @@ function useUrlHelper() {
     const Search = new URLSearchParams(location.search);
 
     Search.set("gameType", gameType);
-    console.log("search", Search, Search.entries());
+    // console.log("search", Search, Search.entries());
     navigate(urlPath(`?gameType=${gameType}`));
   };
 

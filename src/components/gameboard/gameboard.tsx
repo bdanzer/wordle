@@ -33,7 +33,6 @@ function GameBoard({
   challengerData,
   isGameLost,
   isGameWon,
-  onChallenge,
   onStartOver,
   challengeLink,
   miniBoard = false,
@@ -48,7 +47,6 @@ function GameBoard({
   priorityBoxIndex?: number;
   activeRound?: number;
   challengerData?: Rounds | null;
-  onChallenge?: () => void;
   onStartOver?: () => void;
   isGameLost?: boolean;
   isGameWon?: boolean;
@@ -73,6 +71,7 @@ function GameBoard({
   const marginToAccount = 5 * 2;
   const boxMargins = 2.5;
   const boxWidths = (windowWidth - (marginToAccount + boxMargins * 2)) / 5;
+  const isGameOver = isGameLost || isGameWon;
 
   const handleFirstTimeComplete = () => {
     setFirstTimeModal(false);
@@ -84,8 +83,6 @@ function GameBoard({
       setFirstTimeModal(true);
     }
   }, []);
-
-  console.log("gameType in GameBoard", gameType);
 
   return (
     <div
@@ -129,7 +126,7 @@ function GameBoard({
           <FirstTimeModalContent onComplete={handleFirstTimeComplete} />
         </MiniModal>
       )}
-      {(isGameLost || isGameWon) && (
+      {isGameOver && (
         <MiniModal>
           <CompletedModalContent
             roundsData={roundsData}
@@ -138,7 +135,6 @@ function GameBoard({
             isChallenged={isChallenged}
             wordleWord={wordleWord}
             challengeLink={challengeLink}
-            onChallenge={onChallenge}
             onStartOver={onStartOver}
             isGameLost={isGameLost}
             emojis={emojis}
@@ -147,31 +143,37 @@ function GameBoard({
       )}
       {roundsData?.map((row, roundRowIndex) => (
         <div key={roundRowIndex} style={{ display: "flex" }}>
-          {row.map((letterData, letterPosition) => (
-            <WordleBox
-              testId={`${challengerData && miniBoard ? "challenger-" : ""}${
-                miniBoard ? "miniboard-" : ""
-              }gameboard-${roundRowIndex}-${letterPosition}`}
-              key={letterPosition}
-              onSelect={() => {
-                if (activeRound === roundRowIndex) {
-                  handleWordBoxSelect(roundRowIndex, letterPosition);
+          {row.map((letterData, letterPosition) => {
+            const testId = `${
+              challengerData && miniBoard ? "challenger-" : ""
+            }${
+              miniBoard ? "miniboard-" : ""
+            }gameboard-${roundRowIndex}-${letterPosition}`;
+
+            return (
+              <WordleBox
+                testId={testId}
+                key={letterPosition}
+                onSelect={() => {
+                  if (activeRound === roundRowIndex) {
+                    handleWordBoxSelect(roundRowIndex, letterPosition);
+                  }
+                }}
+                hasPriority={
+                  roundRowIndex === activeRound &&
+                  priorityBoxIndex === letterPosition
                 }
-              }}
-              hasPriority={
-                roundRowIndex === activeRound &&
-                priorityBoxIndex === letterPosition
-              }
-              pointer={roundRowIndex === activeRound}
-              selected={letterData.status === "selected"}
-              letter={letterData.letter}
-              status={letterData.status}
-              showLetters={showLetters}
-              miniBoard={miniBoard}
-              width={boxWidths}
-              margin={boxMargins}
-            />
-          ))}
+                pointer={roundRowIndex === activeRound}
+                selected={letterData.status === "selected"}
+                letter={letterData.letter}
+                status={letterData.status}
+                showLetters={showLetters}
+                miniBoard={miniBoard}
+                width={boxWidths}
+                margin={boxMargins}
+              />
+            );
+          })}
         </div>
       ))}
     </div>

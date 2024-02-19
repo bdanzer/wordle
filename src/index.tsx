@@ -10,6 +10,7 @@ import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 import { getOfficialWord, getRandomWord } from "./util/game";
 import { urlPath } from "./util/routing";
+import { WordleProvider } from "./contexts/WordleProvider";
 
 const rootElement = document.getElementById("root") as HTMLElement;
 const root = ReactDOMClient.createRoot(rootElement);
@@ -19,30 +20,7 @@ function Wrapper() {
 }
 
 function Router() {
-  const params = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
   const isFirstTime = !localStorage.getItem("hasPlayed");
-
-  const searchParams = new URLSearchParams(location.search);
-  console.log("params", params);
-
-  const challengerStringData = searchParams.get("challengerGameData");
-  const challengerGameData = challengerStringData
-    ? (JSON.parse(challengerStringData) as Rounds)
-    : null;
-  const wordIndex = searchParams.get("wordIndex")
-    ? parseInt(searchParams.get("wordIndex") ?? "")
-    : null;
-
-  const randomWordleWord = getRandomWord(null, wordIndex);
-  const officialWord = getOfficialWord(wordIndex);
-
-  const [randomWord, setRandomWordleWord] = useState(randomWordleWord);
-
-  const newWordleWord = (wordIndex?: null | number) => {
-    setRandomWordleWord(getRandomWord(null, wordIndex));
-  };
 
   return useRoutes([
     {
@@ -53,14 +31,9 @@ function Router() {
         {
           path: urlPath(),
           element: (
-            <App
-              challengerData={challengerGameData}
-              wordIndex={wordIndex}
-              wordleWord={officialWord}
-              randomWord={randomWord}
-              newWordleWord={newWordleWord}
-              isFirstTime={isFirstTime}
-            />
+            <WordleProvider>
+              <App isFirstTime={isFirstTime} />
+            </WordleProvider>
           ),
         },
       ],

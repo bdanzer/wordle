@@ -1,5 +1,5 @@
 import { WritableDraft } from "immer/dist/internal";
-import { flattenDeep, reverse, uniqBy } from "lodash";
+import { flatten, flattenDeep, reverse, uniqBy } from "lodash";
 import {
   GameType,
   GameTypes,
@@ -206,7 +206,7 @@ export const getLocalGame = (
 };
 
 export const getLocalGamesByType = (gameType?: GameTypes) => {
-  if (!gameType) return []
+  if (!gameType) return [];
 
   const localGames =
     gameType === GameType.Official
@@ -247,4 +247,22 @@ export const saveGame = (
       )
     )
   );
+};
+
+export const getRoundsLetters = (roundsData: Rounds) => {
+  const flattenedRounds = flatten(roundsData);
+
+  const greenLetters = flattenedRounds
+    .filter((thing) => thing.status === "green")
+    .map((letters) => letters.letter);
+
+  const yellowLetters = flattenedRounds
+    .filter((thing) => thing.status === "yellow")
+    .map((letters) => letters.letter);
+
+  const failedLetters = flattenedRounds
+    .filter((thing) => thing.status === "wrong")
+    .map((letters) => letters.letter);
+
+  return { greenLetters, yellowLetters, failedLetters };
 };

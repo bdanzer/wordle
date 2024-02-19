@@ -1,5 +1,5 @@
 import produce from "immer";
-import { flatten, trim } from "lodash";
+import { trim } from "lodash";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import wordleList from "./wordleList.json";
@@ -10,6 +10,7 @@ import {
   getBoxPriorityPosition,
   getItemStatus,
   getLocalGame,
+  getRoundsLetters,
   homeUrl,
   initStatus,
   saveGame,
@@ -23,31 +24,21 @@ import useUrlHelper from "./hooks/useUrlHelper";
 
 import "./styles.css";
 import { useNavigate } from "react-router";
-import MatchHistory from "./components/match-history/match-history";
+import { useCurrentWord } from "./hooks/useCurrentWord";
+import { useChallengerData } from "./hooks/useChallengerData";
 
-export default function App({
-  challengerData,
-  wordleWord,
-  newWordleWord,
-  isFirstTime,
-  randomWord,
-}: {
-  challengerData: Rounds | null;
-  wordIndex: number | null;
-  wordleWord: string;
-  newWordleWord: () => void;
-  isFirstTime: boolean;
-  randomWord: string;
-}) {
+export default function App({ isFirstTime }: { isFirstTime: boolean }) {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
+  console.log({ roundsData });
   const [currentRound, setCurrentRound] = useState(0);
   const [isNotAWord, setNotAWord] = useState(false);
   const [isGameWon, setGameWon] = useState(false);
   const [isGameLost, setGameLost] = useState(false);
-  const [title, setTitle] = useState("A Wordle Challenge Game!");
   const { generateChallengeLink } = useChallenge();
   const { getGameType } = useUrlHelper();
   const navigate = useNavigate();
+  const { officialWord, randomWord, generateNewWord } = useCurrentWord();
+  const { challengerGameData: challengerData } = useChallengerData();
 
   const gameId = getGameType();
   const localGame = gameId === GameType.Official ? getLocalGame(gameId) : null;
@@ -55,7 +46,7 @@ export default function App({
   const emojis = emojiCreation(roundsData.slice(0, currentRound + 1));
   const currentWord = buildWord(roundsData[currentRound]);
   const word =
-    gameId === GameType.Official && !challengerData ? wordleWord : randomWord;
+    gameId === GameType.Official && !challengerData ? officialWord : randomWord;
 
   const gameWon =
     (gameId === GameType.Official &&
@@ -68,34 +59,10 @@ export default function App({
       !challengerData) ||
     isGameLost;
 
-  console.log("Current Round", currentRound);
-  console.log("Wordle Word", word);
-  console.log("Rounds Data", roundsData);
-  console.log("Challenger Data", challengerData);
-  console.log("Local Game", localGame);
+  const { greenLetters, yellowLetters, failedLetters } =
+    getRoundsLetters(roundsData);
 
   const priorityBoxIndex = getBoxPriorityPosition(roundsData[currentRound]);
-
-  console.log({ roundsData, priorityBoxIndex });
-
-  const flattenedRounds = flatten(roundsData);
-
-  const greenLetters = flattenedRounds
-    .filter((thing) => thing.status === "green")
-    .map((letters) => letters.letter);
-
-  const yellowLetters = flattenedRounds
-    .filter((thing) => thing.status === "yellow")
-    .map((letters) => letters.letter);
-
-  const failedLetters = flattenedRounds
-    .filter((thing) => thing.status === "wrong")
-    .map((letters) => letters.letter);
-
-  const handleChallenge = () => {
-    const stringifiedRoundsData = JSON.stringify(roundsData);
-    const link = generateChallengeLink(roundsData, word);
-  };
 
   const handleWordBoxSelected = (wordBoxValues: WordBoxValues) => {
     console.log("running", wordBoxValues);
@@ -190,11 +157,7 @@ export default function App({
             );
 
             if (selectedStatusItem) {
-              if (!selectedStatusItem.letter) {
-                selectedStatusItem.status = "selected";
-              } else {
-                selectedStatusItem.status = "pending";
-              }
+              selectedStatusItem.status = "pending";
               selectedStatusItem.letter = key;
             } else if (selectedNoneItem) {
               selectedNoneItem.letter = key;
@@ -242,7 +205,7 @@ export default function App({
     setGameLost(false);
     setCurrentRound(0);
     setRoundsData(initStatus);
-    newWordleWord();
+    generateNewWord();
 
     if (
       (!getLocalGame(GameType.Official) && gameId === "Random") ||
@@ -258,7 +221,7 @@ export default function App({
         {gameId}
       </div>
       <Helmet>
-        <title>{title}</title>
+        <title>A Wordle Challenge Game!</title>
         <meta name="description" content="Send Wordle Challenges" />
       </Helmet>
       <div style={{ marginBottom: 6 }}>
@@ -270,7 +233,6 @@ export default function App({
           challengerData={challengerData}
           isGameWon={gameWon}
           isGameLost={gameLost}
-          onChallenge={handleChallenge}
           onStartOver={handleStartOver}
           challengeLink={generateChallengeLink(roundsData, word)}
           wordleWord={word}

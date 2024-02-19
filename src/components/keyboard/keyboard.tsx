@@ -22,7 +22,6 @@ function BackSpaceKey({
         marginRight: -16,
         borderRadius: 6,
         backgroundColor: "white",
-        // color: "white",
         fontSize: 10,
         textTransform: "uppercase",
       }}
@@ -112,7 +111,6 @@ function Keyboard({
               width: "100%",
               flexWrap: "wrap",
               justifyContent: "center",
-              // alignItems: "center"
             }}
           >
             {letters.map((letter) =>

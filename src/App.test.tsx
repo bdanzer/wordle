@@ -1,10 +1,14 @@
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
 import { GameType, Outcome, Rounds } from "./@types";
 import App from "./App";
 import { getOfficialWord, getRandomWord, saveGame } from "./util/game";
 import { roundsData } from "./__mocks__/roundsData";
+import { WordleProvider } from "./contexts/WordleProvider";
+import * as Game from "./util/game";
+
+const getRandomWordSpy = jest.spyOn(Game, "getRandomWord");
 
 describe("test", () => {
   test("Test NYT Word", async () => {
@@ -18,8 +22,10 @@ describe("test", () => {
       ? parseInt(searchParams.get("wordIndex") ?? "")
       : null;
 
-    const randomWordleWord = getRandomWord(null, wordIndex);
+    const randomWordleWord = "cheap";
     const officialWord = getOfficialWord(wordIndex);
+
+    getRandomWordSpy.mockReturnValue("cheap");
 
     const newWordleWord = (wordIndex?: null | number) => {
       // setRandomWordleWord(getRandomWord(null, wordIndex));
@@ -29,14 +35,9 @@ describe("test", () => {
 
     const screenItem = render(
       <MemoryRouter initialEntries={["?gameType=NYT"]}>
-        <App
-          challengerData={challengerGameData}
-          wordIndex={wordIndex}
-          wordleWord={officialWord}
-          randomWord={randomWordleWord}
-          newWordleWord={newWordleWord}
-          isFirstTime={false}
-        />
+        <WordleProvider>
+          <App isFirstTime={false} />
+        </WordleProvider>
       </MemoryRouter>
     );
 
@@ -88,6 +89,7 @@ describe("test", () => {
     );
 
     await user.click(screenItem.getByText("Start New Game"));
+    getRandomWordSpy.mockReturnValue("reads");
     const playOfficialWordButton = screenItem.getByText("Play Official Word");
     expect(playOfficialWordButton);
     await user.click(playOfficialWordButton);
@@ -109,8 +111,10 @@ describe("test", () => {
       ? parseInt(searchParams.get("wordIndex") ?? "")
       : null;
 
-    const randomWordleWord = getRandomWord(null, wordIndex);
+    const randomWordleWord = "chirp";
     const officialWord = getOfficialWord(wordIndex);
+
+    getRandomWordSpy.mockReturnValue("chirp");
 
     const newWordleWord = (wordIndex?: null | number) => {
       // setRandomWordleWord(getRandomWord(null, wordIndex));
@@ -119,15 +123,17 @@ describe("test", () => {
     const user = userEvent.setup();
 
     const screenItem = render(
-      <MemoryRouter initialEntries={["?gameType=Random"]}>
-        <App
-          challengerData={challengerGameData}
-          wordIndex={wordIndex}
-          wordleWord={officialWord}
-          randomWord={randomWordleWord}
-          newWordleWord={newWordleWord}
-          isFirstTime={false}
-        />
+      <MemoryRouter initialEntries={[`/?gameType=Random&wordIndex=11`]}>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <WordleProvider>
+                <App isFirstTime={false} />
+              </WordleProvider>
+            }
+          />
+        </Routes>
       </MemoryRouter>
     );
 
@@ -196,9 +202,10 @@ describe("test", () => {
   });
 
   test("Test NYT Challenge", async () => {
+    getRandomWordSpy.mockReturnValue("midst");
     saveGame(GameType.Official, roundsData, "midst", Outcome.W);
     const searchParams = new URLSearchParams(
-      '?challengerGameData=%5B%5B%7B"status"%3A"wrong"%2C"letter"%3A"b"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"l"%7D%5D%2C%5B%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"e"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"a"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"n"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"k"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"t"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"h"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"u"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"green"%2C"letter"%3A"m"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"s"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"t"%7D%5D%2C%5B%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%5D%5D&wordIndex=322&gameType=NYT'
+      `?challengerGameData=%5B%5B%7B"status"%3A"wrong"%2C"letter"%3A"b"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"l"%7D%5D%2C%5B%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"e"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"a"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"n"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"k"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"t"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"h"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"u"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"green"%2C"letter"%3A"m"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"s"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"t"%7D%5D%2C%5B%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%5D%5D&wordIndex=322&gameType=NYT`
     );
 
     const challengerStringData = searchParams.get("challengerGameData");
@@ -207,11 +214,6 @@ describe("test", () => {
       : null;
     const wordIndex = 322;
     const randomWordleWord = getRandomWord(null, wordIndex);
-    const officialWord = getOfficialWord(wordIndex);
-
-    const newWordleWord = (wordIndex?: null | number) => {
-      // setRandomWordleWord(getRandomWord(null, wordIndex));
-    };
 
     const user = userEvent.setup();
 
@@ -221,14 +223,9 @@ describe("test", () => {
           '?challengerGameData=%5B%5B%7B"status"%3A"wrong"%2C"letter"%3A"b"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"o"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"l"%7D%5D%2C%5B%7B"status"%3A"wrong"%2C"letter"%3A"r"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"e"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"a"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"n"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"k"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"yellow"%2C"letter"%3A"t"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"h"%7D%2C%7B"status"%3A"wrong"%2C"letter"%3A"u"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"yellow"%2C"letter"%3A"s"%7D%5D%2C%5B%7B"status"%3A"green"%2C"letter"%3A"m"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"i"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"d"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"s"%7D%2C%7B"status"%3A"green"%2C"letter"%3A"t"%7D%5D%2C%5B%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%2C%7B"status"%3A"none"%2C"letter"%3A""%7D%5D%5D&wordIndex=322&gameType=NYT',
         ]}
       >
-        <App
-          challengerData={challengerGameData}
-          wordIndex={wordIndex}
-          wordleWord={officialWord}
-          randomWord={randomWordleWord}
-          newWordleWord={newWordleWord}
-          isFirstTime={false}
-        />
+        <WordleProvider>
+          <App isFirstTime={false} />
+        </WordleProvider>
       </MemoryRouter>
     );
 

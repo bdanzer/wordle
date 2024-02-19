@@ -16,7 +16,9 @@ function useChallenge() {
           ? `Offical Word Challenge - Word ${wordIndex} \n\n`
           : `Random Word Challenge - Word ${wordIndex} \n\n`
       }`;
-      return `${preText}${document.location.origin}${homeUrl}?${stringUrl}&gameType=${gameType}`;
+      // return `${preText}${document.location.origin}${homeUrl}?${stringUrl}&gameType=${gameType}`;
+
+      return `https://bdanzer.github.io/wordle/?${stringUrl}&gameType=${gameType}`;
     },
   };
 }

@@ -4,7 +4,7 @@ import GameBoard from "../gameboard/gameboard";
 
 function MatchHistory({ gameType }: { gameType?: GameTypes }) {
   const localGames = getLocalGamesByType(gameType);
-  console.log("Match History Game Type", gameType);
+  // console.log("Match History Game Type", gameType);
   return (
     <div>
       {localGames.map((localGame) => (
