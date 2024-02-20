@@ -104,14 +104,14 @@ function GameBoard({
   }, [isGameOver]);
 
   useEffect(() => {
-    if (!miniBoard) {
+    if (!miniBoard && gameType) {
       start();
     }
 
     return () => {
       pause();
     };
-  }, []);
+  }, [gameType]);
 
   return (
     <div
