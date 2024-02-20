@@ -1,5 +1,6 @@
-import { statuses } from "../../@types";
-import { keyboardLetters } from "../../util/game";
+import React from "react";
+import { Rounds, statuses } from "../../@types";
+import { getRoundsLetters, keyboardLetters } from "../../util/game";
 import { black, getColor, gray, green, red } from "../../util/getColor";
 import Button from "../Button/Button";
 
@@ -67,20 +68,20 @@ function LetterKey({
 }
 
 function Keyboard({
-  greenLetters,
-  yellowLetters,
-  failedLetters,
+  roundsData,
   onLetterSelection,
   notAWord,
   wordComplete,
 }: {
-  greenLetters: string[];
-  yellowLetters: string[];
-  failedLetters: string[];
+  roundsData: Rounds;
   onLetterSelection: (letter: string) => void;
   notAWord: boolean;
   wordComplete: boolean;
 }) {
+  console.log("renders keyboard");
+  const { greenLetters, yellowLetters, failedLetters } =
+    getRoundsLetters(roundsData);
+
   const getLetterColor = (letter: string) => {
     let color: statuses = "pending";
     if (greenLetters.includes(letter)) {
@@ -143,4 +144,4 @@ function Keyboard({
   );
 }
 
-export default Keyboard;
+export default React.memo(Keyboard);

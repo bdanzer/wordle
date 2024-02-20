@@ -1,5 +1,6 @@
 import { useLocation } from "react-router";
 import { Rounds } from "../@types";
+import { useMemo } from "react";
 
 function getChallengerRoundsCompleted() {}
 
@@ -10,9 +11,13 @@ export function useChallengerData() {
 
   const time = searchParams.get("time");
   const challengerStringData = searchParams.get("challengerGameData");
-  const challengerGameData = challengerStringData
-    ? (JSON.parse(challengerStringData) as Rounds)
-    : null;
+  const challengerGameData = useMemo(
+    () =>
+      challengerStringData
+        ? (JSON.parse(challengerStringData) as Rounds)
+        : null,
+    [challengerStringData]
+  );
 
   console.log({ challengerGameData });
 
