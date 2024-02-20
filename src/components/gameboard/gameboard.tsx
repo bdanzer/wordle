@@ -1,29 +1,11 @@
 import { GameTypes, Rounds, WordBoxValues } from "../../@types";
 import WordleBox from "../wordle-box/wordle-box";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CompletedModalContent from "./completed-modal-content";
 import FirstTimeModalContent from "./first-time-modal-content";
 import GameSelectionModalContent from "./game-selection-modal-content";
 import { useChallengerData } from "../../hooks/useChallengerData";
-
-function MiniModal({ children }: { children: ReactNode }) {
-  return (
-    <div
-      data-testid="mini-modal"
-      style={{
-        background: "white",
-        position: "absolute",
-        height: "calc(100% - 32px)",
-        width: "calc(100% - 32px)",
-        // color: "white",
-        borderRadius: 6,
-        padding: 16,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
+import { MiniModal } from "./mini-modal";
 
 function GameBoard({
   roundsData,
@@ -33,21 +15,20 @@ function GameBoard({
   challengerData,
   isGameLost,
   isGameWon,
-  onStartOver,
   challengeLink,
   miniBoard = false,
   showLetters = true,
   wordleWord,
   emojis,
-  onWordBoxSelected,
   gameType,
+  onStartOver,
+  onWordBoxSelected,
 }: {
   roundsData?: Rounds | null;
   isFirstTime?: Boolean;
   priorityBoxIndex?: number;
   activeRound?: number;
   challengerData?: Rounds | null;
-  onStartOver?: () => void;
   isGameLost?: boolean;
   isGameWon?: boolean;
   challengeLink?: string;
@@ -55,9 +36,10 @@ function GameBoard({
   showLetters?: boolean;
   wordleWord?: string;
   emojis?: string;
+  gameType?: GameTypes;
+  onStartOver?: () => void;
   onWordBoxSelected?: (obj: WordBoxValues) => void;
   onGameSelection?: (game: GameTypes) => void;
-  gameType?: GameTypes;
 }) {
   const [firstTimeModal, setFirstTimeModal] = useState(false);
   const isChallenged = Boolean(challengerData);
