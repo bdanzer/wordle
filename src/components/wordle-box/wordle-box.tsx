@@ -1,5 +1,5 @@
 import { statuses } from "../../@types";
-import { getColor, selectedColor } from "../../util/getColor";
+import { black, getColor } from "../../util/getColor";
 
 function WordleBox({
   letter,
@@ -47,7 +47,12 @@ function WordleBox({
             : status === "pending"
             ? ".5s ease"
             : "2s ease",
-        background: hasChallengerMet ? "#707B7C" : getColor(status),
+        background: getColor(status),
+        // boxShadow: `${getColor(status)} 0px 0px 0px 4px inset`,
+        // opacity: hasChallengerMet ? 0.8 : 1,
+        ...(hasChallengerMet && {
+          boxShadow: `${black} 0px 0px 0px 2px inset`,
+        }),
         // border: "2px solid white",
         margin: miniBoard ? 1 : margin || 2,
         color: "white",
