@@ -85,8 +85,6 @@ function GameBoard({
     }
   }, []);
 
-  console.log("GAMEBOARD RENDERS");
-
   return (
     <div
       style={{

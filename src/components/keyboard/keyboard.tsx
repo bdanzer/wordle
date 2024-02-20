@@ -78,7 +78,6 @@ function Keyboard({
   notAWord: boolean;
   wordComplete: boolean;
 }) {
-  console.log("renders keyboard");
   const { greenLetters, yellowLetters, failedLetters } =
     getRoundsLetters(roundsData);
 

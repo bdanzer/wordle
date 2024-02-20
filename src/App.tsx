@@ -123,7 +123,6 @@ export default function App({ isFirstTime }: { isFirstTime: boolean }) {
   });
 
   const handleWordBoxSelected = useCallback((wordBoxValues: WordBoxValues) => {
-    console.log("running", wordBoxValues);
     setRoundsData(
       produce((draftState) => {
         const selectedLetterBox =

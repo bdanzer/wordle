@@ -9,8 +9,6 @@ export function WordleProvider({ children }: { children: ReactNode }) {
 
   const searchParams = new URLSearchParams(location.search);
 
-  console.log({ searchParams: searchParams.toString() });
-
   const wordIndex = searchParams.get("wordIndex")
     ? parseInt(searchParams.get("wordIndex") ?? "")
     : null;
