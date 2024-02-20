@@ -67,9 +67,11 @@ function useCopied() {
 function ModalHeader({
   wordleWord,
   isGameWon,
+  time,
 }: {
   wordleWord?: string;
   isGameWon?: boolean;
+  time?: number;
 }) {
   return (
     <>
@@ -109,6 +111,7 @@ function CompletedModalContent({
   challengeLink,
   isGameLost,
   emojis,
+  time,
 }: {
   wordleWord?: string;
   isGameWon?: boolean;
@@ -119,14 +122,16 @@ function CompletedModalContent({
   challengeLink?: string;
   isGameLost?: boolean;
   emojis?: string;
+  time?: number;
 }) {
   const { isCopied: isChallengeLinkCopied, setCopied: setChallengeLinkCopied } =
     useCopied();
   const { isCopied: isEmojiCopied, setCopied: setEmojiCopied } = useCopied();
+  const { completionTime } = useChallengerData();
 
   return (
     <div style={{ marginBottom: 6 }}>
-      <ModalHeader wordleWord={wordleWord} isGameWon={isGameWon} />
+      <ModalHeader wordleWord={wordleWord} isGameWon={isGameWon} time={time} />
       <Divider />
       {isChallenged ? (
         <ChallengeBoards roundsData={roundsData} />
@@ -149,7 +154,7 @@ function CompletedModalContent({
           Start New Game
         </Button>
         <CopyToClipboard
-          text={challengeLink || ""}
+          text={challengeLink ? challengeLink + `&time=${time}` : ""}
           onCopy={() => setChallengeLinkCopied(true)}
         >
           <Button

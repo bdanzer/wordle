@@ -8,6 +8,7 @@ export function useChallengerData() {
 
   const searchParams = new URLSearchParams(location.search);
 
+  const time = searchParams.get("time");
   const challengerStringData = searchParams.get("challengerGameData");
   const challengerGameData = challengerStringData
     ? (JSON.parse(challengerStringData) as Rounds)
@@ -23,5 +24,9 @@ export function useChallengerData() {
     -1
   );
 
-  return { challengerGameData, challengerRowCompletion };
+  return {
+    challengerGameData,
+    challengerRowCompletion,
+    completionTime: time ? Number(time) : null,
+  };
 }
