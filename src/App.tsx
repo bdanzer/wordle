@@ -249,6 +249,22 @@ export default function App({ isFirstTime }: { isFirstTime: boolean }) {
     [handleLetter]
   );
 
+  const handleStartOver = useCallback(() => {
+    setGameWon(false);
+    setGameLost(false);
+    setCurrentRound(0);
+    setRoundsData(initStatus);
+    generateNewWord();
+    reset();
+
+    if (
+      (!getLocalGame(GameType.Official) && gameId === "Random") ||
+      gameId === "NYT"
+    ) {
+      navigate(homeUrl, { replace: true });
+    }
+  }, [navigate, gameId]);
+
   useEffect(() => {
     if (isGameOver) {
       pause();
@@ -266,13 +282,6 @@ export default function App({ isFirstTime }: { isFirstTime: boolean }) {
   }, [gameId, currentRound]);
 
   useEffect(() => {
-    document.addEventListener("keydown", handleLetter);
-    return () => {
-      document.removeEventListener("keydown", handleLetter);
-    };
-  }, [currentRound, isGameLost, isGameWon, word]);
-
-  useEffect(() => {
     if (isGameWon) {
       saveGame(gameId, roundsData, word, Outcome.W);
     }
@@ -284,21 +293,12 @@ export default function App({ isFirstTime }: { isFirstTime: boolean }) {
     }
   }, [isGameLost]);
 
-  const handleStartOver = useCallback(() => {
-    setGameWon(false);
-    setGameLost(false);
-    setCurrentRound(0);
-    setRoundsData(initStatus);
-    generateNewWord();
-    reset();
-
-    if (
-      (!getLocalGame(GameType.Official) && gameId === "Random") ||
-      gameId === "NYT"
-    ) {
-      navigate(homeUrl, { replace: true });
-    }
-  }, [navigate, gameId]);
+  useEffect(() => {
+    document.addEventListener("keydown", handleLetter);
+    return () => {
+      document.removeEventListener("keydown", handleLetter);
+    };
+  }, [currentRound, isGameLost, isGameWon, word]);
 
   return (
     <div className="App" data-testid={word}>
