@@ -18,7 +18,7 @@ function useChallenge() {
       }`;
       // return `${preText}${document.location.origin}${homeUrl}?${stringUrl}&gameType=${gameType}`;
 
-      return `https://bdanzer.github.io/wordle/?${stringUrl}&gameType=${gameType}`;
+      return `${preText}https://bdanzer.github.io/wordle/?${stringUrl}&gameType=${gameType}`;
     },
   };
 }
