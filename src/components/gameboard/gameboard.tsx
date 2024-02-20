@@ -61,12 +61,6 @@ function GameBoard({
 }) {
   const [firstTimeModal, setFirstTimeModal] = useState(false);
   const isChallenged = Boolean(challengerData);
-  const handleWordBoxSelect = (roundRowIndex: number, wordBoxIndex: number) => {
-    onWordBoxSelected?.({
-      roundRowIndex,
-      wordBoxIndex,
-    });
-  };
   const { challengerRowCompletion, completionTime } = useChallengerData();
   const windowWidth = window.innerWidth > 375 ? 375 : window.innerWidth;
   const marginToAccount = 5 * 2;
@@ -77,6 +71,13 @@ function GameBoard({
   const handleFirstTimeComplete = () => {
     setFirstTimeModal(false);
     localStorage.setItem("hasPlayed", "true");
+  };
+
+  const handleWordBoxSelect = (roundRowIndex: number, wordBoxIndex: number) => {
+    onWordBoxSelected?.({
+      roundRowIndex,
+      wordBoxIndex,
+    });
   };
 
   useEffect(() => {
@@ -133,8 +134,8 @@ function GameBoard({
 
             return (
               <WordleBox
-                testId={testId}
                 key={letterPosition}
+                testId={testId}
                 onSelect={() => {
                   if (activeRound === roundRowIndex) {
                     handleWordBoxSelect(roundRowIndex, letterPosition);
