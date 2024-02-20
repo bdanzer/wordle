@@ -10,7 +10,6 @@ import {
   getBoxPriorityPosition,
   getItemStatus,
   getLocalGame,
-  getRoundsLetters,
   homeUrl,
   initStatus,
   saveGame,
@@ -21,13 +20,13 @@ import { GameType, Outcome, Rounds, WordBoxValues } from "./@types";
 import GameBoard from "./components/gameboard/gameboard";
 import useChallenge from "./hooks/useChallenge";
 import useUrlHelper from "./hooks/useUrlHelper";
-
-import "./styles.css";
 import { useNavigate } from "react-router";
 import { useCurrentWord } from "./hooks/useCurrentWord";
 import { useChallengerData } from "./hooks/useChallengerData";
 import { useTimer } from "use-timer";
 import { GameBoardHeader } from "./components/gameboard/gameboard-header";
+
+import "./styles.css";
 
 export default function App({ isFirstTime }: { isFirstTime: boolean }) {
   const [roundsData, setRoundsData] = useState<Rounds>(initStatus);
