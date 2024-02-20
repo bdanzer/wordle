@@ -48,25 +48,20 @@ function WordleBox({
             ? ".5s ease"
             : "2s ease",
         background: getColor(status),
-        // boxShadow: `${getColor(status)} 0px 0px 0px 4px inset`,
-        // opacity: hasChallengerMet ? 0.8 : 1,
-        ...(hasChallengerMet && {
-          boxShadow: `${black} 0px 0px 0px 2px inset`,
-        }),
-        // border: "2px solid white",
         margin: miniBoard ? 1 : margin || 2,
         color: "white",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         textTransform: "uppercase",
+        ...(hasChallengerMet && {
+          boxShadow: `${black} 0px 0px 0px 2px inset`,
+        }),
         ...(pointer && { cursor: "pointer" }),
-        // ...(hasPriority && { boxShadow: "inset 0 -2px 0 red" }),
         ...(status === "locked" && {
           boxShadow: "#229954 0px 0px 0px 4px inset",
         }),
         ...(hasPriority && { boxShadow: "#2980B9 0px 0px 0px 4px inset" }),
-        // ...(inline && { alignSelf: "flex-start" }),
       }}
       onClick={() => onSelect?.()}
     >
